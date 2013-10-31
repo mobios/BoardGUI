@@ -1,11 +1,8 @@
 package clueGame;
 
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.JCheckBox;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
@@ -34,14 +31,4 @@ public class PanelPeople extends JPanel {
 		add(aHepburnBox);
 	}
 	
-	private class CheckboxListener implements ActionListener{
-
-		public void actionPerformed(ActionEvent e) {
-			
-			if(colMustardBox.isSelected()){	
-				
-			}
-			
-		}
-	}
 }

@@ -53,7 +53,6 @@ public class ClueGame extends JFrame {
 		
 		solution = new ArrayList<Card>();
 		players = new ArrayList<Player>();
-		
 		randGen = new Random(0);
 		
 		playerConfig = "players.txt";
@@ -73,6 +72,8 @@ public class ClueGame extends JFrame {
 		setJMenuBar(menuBar);
 		menuBar.add(createFileMenu());
 		
+		add(board);
+		
 	}
 
 
@@ -87,8 +88,8 @@ public class ClueGame extends JFrame {
 	private JMenu createFileMenu() { // to create a MenuBar Menu named file
 
 		JMenu menu = new JMenu("File"); 
-		menu.add(createFileExitItem());
 		menu.add(createFileDetectiveNotesItem());
+		menu.add(createFileExitItem());
 		return menu;
 
 	}
