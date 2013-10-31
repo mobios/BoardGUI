@@ -8,8 +8,8 @@ public class Walkway extends BoardCell {
 	
 	public Walkway(int row, int column) {
 		super(row, column);
-		x = super.getX();
-		y = super.getX();
+		x = (this.getColumn() *  super.getScale());
+		y = (this.getRow() *  super.getScale());
 		w = super.getWidth();
 		h = super.getHeight();
 	}
@@ -23,7 +23,9 @@ public class Walkway extends BoardCell {
 	public void draw(Graphics g){
 		
 		g.setColor(Color.YELLOW);
-		g.drawRect(x, y, w, h);
+		g.fillRect(x, y, w, h);
+		g.setColor(Color.black);
+		g.drawRect(x, y, w+1, h+1);
 		
 	}
 	

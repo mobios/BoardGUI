@@ -11,10 +11,10 @@ public class RoomCell extends BoardCell {
  	public RoomCell(int row, int column, char initial) {
 		super(row, column);
 		roomInitial = initial;
-		x = super.getX();
-		y = super.getX();
+		x = (this.getColumn() * super.getScale());
+		y = (this.getRow() *  super.getScale());
 		w = super.getWidth();
-		h = super.getHeight();	
+		h = super.getHeight();
 	}
 	
 	@Override
@@ -27,8 +27,15 @@ public class RoomCell extends BoardCell {
 	@Override
 	public void draw(Graphics g){
 		
-		g.setColor(Color.BLUE);
-		g.drawRect(x, y, w, h);
+		g.setColor(Color.gray);
+		g.fillRect(x, y, w, h);
+		if (this.doorDirection == DoorDirection.DOWN){
+			g.setColor(Color.BLUE);
+			g.fillRect(x + 4, y + 20, w + 4, h - 20);
+		} else if(this.doorDirection == DoorDirection.LEFT){
+			g.setColor(Color.BLUE);
+			g.fillRect(x + 20, y, w - 20, h + 4);
+		}
 		
 	}
 	

@@ -67,9 +67,10 @@ public class ClueGame extends JFrame {
 		notes = new DetectiveNotes();
 		
 		setTitle("Clue Game");
-		setSize(700, 725);
+		setSize(783, 827);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setJMenuBar(menuBar);
+		setBackground(Color.gray);
 		menuBar.add(createFileMenu());
 		
 		add(board);

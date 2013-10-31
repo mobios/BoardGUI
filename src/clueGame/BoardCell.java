@@ -4,15 +4,16 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 
 public abstract class BoardCell {
-	private int row, column, x, y, width, height;
+	private int row, column, x, y, width, height, scale;
 	
 	public BoardCell(int row, int column){
 		this.row = row;
 		this.column = column;
-		width = 20;
-		height = 20;
+		width = 30;
+		height = 30;
 		x = 0;
 		y = 0;
+		scale = 32;
 	}
 	
 	public boolean isWalkway(){
@@ -66,21 +67,7 @@ public abstract class BoardCell {
 		return ret;
 	}
 
-	public int getX() {
-		return x;
-	}
 
-	public void setX(int x) {
-		this.x = x;
-	}
-
-	public int getY() {
-		return y;
-	}
-
-	public void setY(int y) {
-		this.y = y;
-	}
 
 	public int getWidth() {
 		return width;
@@ -96,6 +83,14 @@ public abstract class BoardCell {
 
 	public void setHeight(int height) {
 		this.height = height;
+	}
+
+	public int getScale() {
+		return scale;
+	}
+
+	public void setScale(int scale) {
+		this.scale = scale;
 	}
 	
 	

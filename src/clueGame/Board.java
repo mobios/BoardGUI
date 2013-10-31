@@ -61,7 +61,9 @@ public class Board extends JPanel {
 	
 	public void paintComponent(Graphics g){ // used to draw the board
 		
-		super.paintComponent(g);
+		for (BoardCell cell: cellsList){
+			cell.draw(g);
+		}
 		
 	}
 	
