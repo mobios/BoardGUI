@@ -1,0 +1,11 @@
+K, Kitchen
+L, Living Room
+O, Observatory
+P, Planetarium
+H, High Energy Laser Lab
+S, Sauna
+D, Dungeon
+A, Armoury 
+N, Natatorium
+X, Closet
+W, Walkway

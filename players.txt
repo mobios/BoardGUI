@@ -1,0 +1,6 @@
+Colonel Mustard,124,100,95,6,23
+Miss. Purple,290,100,95,10,0
+Dirty Harry,28,80,51,0,6
+Kirk Lazarus,0,87,89,0,14
+Tugg Speedman,228,87,89,23,5
+Audrey Hepburn,34,98,97,23,14

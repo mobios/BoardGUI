@@ -1,0 +1,47 @@
+package clueGame;
+
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.border.EtchedBorder;
+import javax.swing.border.TitledBorder;
+
+public class PanelPeople extends JPanel {
+	
+	JCheckBox  colMustardBox, missPBox, dHarryBox, kLazarusBox, tSpeedmanBox, aHepburnBox;
+	
+	public PanelPeople(){
+		
+		colMustardBox = new JCheckBox("Colonel Mustard");
+		missPBox = new JCheckBox("Miss. Purple");
+		dHarryBox = new JCheckBox("Dirty Harry");
+		kLazarusBox = new JCheckBox("Kirk Lazarus");
+		tSpeedmanBox = new JCheckBox("Tugg Speedman");
+		aHepburnBox = new JCheckBox("Audrey Hepburn");
+		
+		setBorder(new TitledBorder (new EtchedBorder(), "People"));
+		setLayout(new GridLayout(0, 2));
+		
+		add(colMustardBox);
+		add(missPBox);
+		add(dHarryBox);
+		add(kLazarusBox);
+		add(tSpeedmanBox);
+		add(aHepburnBox);
+	}
+	
+	private class CheckboxListener implements ActionListener{
+
+		public void actionPerformed(ActionEvent e) {
+			
+			if(colMustardBox.isSelected()){	
+				
+			}
+			
+		}
+	}
+}

@@ -1,0 +1,22 @@
+P, Colonel Mustard
+P, Miss. Purple
+P, Dirty Harry
+P, Kirk Lazarus
+P, Tugg Speedman
+P, Audrey Hepburn
+W, Shuriken
+W, Claymore
+W, Ice Pick
+W, Polearm
+W, Nightshade
+W, Claymore Mine
+W, Garrote
+R, Kitchen
+R, Living Room
+R, Observatory
+R, Planetarium
+R, High Energy Laser Lab
+R, Sauna
+R, Dungeon
+R, Armoury 
+R, Natatorium
