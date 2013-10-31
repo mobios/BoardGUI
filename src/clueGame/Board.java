@@ -24,6 +24,7 @@ public class Board extends JPanel {
 	private Set<BoardCell> targets;
 	private boolean[] visited;
 	private int numRows, numColumns;
+	ClueGame game;
 	private String legendFile, layoutFile;
 	
 	public String getLegendFile() {
@@ -61,8 +62,14 @@ public class Board extends JPanel {
 	
 	public void paintComponent(Graphics g){ // used to draw the board
 		
+		game = new ClueGame();
+		ArrayList<Player> players = game.getPlayers();
+		
 		for (BoardCell cell: cellsList){
-			cell.draw(g);
+			cell.draw(g, this);
+		}
+		for (Player p: players){
+			p.drawPalyers(g);
 		}
 		
 	}

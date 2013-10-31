@@ -4,15 +4,13 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 
 public abstract class BoardCell {
-	private int row, column, x, y, width, height, scale;
+	private int row, column, width, height, scale;
 	
 	public BoardCell(int row, int column){
 		this.row = row;
 		this.column = column;
 		width = 30;
 		height = 30;
-		x = 0;
-		y = 0;
 		scale = 32;
 	}
 	
@@ -28,7 +26,7 @@ public abstract class BoardCell {
 		return false;
 	}
 	
-	public abstract void draw(Graphics g);
+	public abstract void draw(Graphics g, Board b);
 
 	public int getRow() {
 		return row;
@@ -92,7 +90,10 @@ public abstract class BoardCell {
 	public void setScale(int scale) {
 		this.scale = scale;
 	}
+
+	public abstract int getX();
 	
+	public abstract int getY();
 	
 	
 }

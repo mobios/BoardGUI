@@ -20,7 +20,7 @@ public class Walkway extends BoardCell {
 	}
 	
 	@Override
-	public void draw(Graphics g){
+	public void draw(Graphics g, Board b){
 		
 		g.setColor(Color.YELLOW);
 		g.fillRect(x, y, w, h);
@@ -28,5 +28,22 @@ public class Walkway extends BoardCell {
 		g.drawRect(x, y, w+1, h+1);
 		
 	}
+
+	public int getX() {
+		return x;
+	}
+
+	public void setX(int x) {
+		this.x = x;
+	}
+
+	public int getY() {
+		return y;
+	}
+
+	public void setY(int y) {
+		this.y = y;
+	}
+	
 	
 }

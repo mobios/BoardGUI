@@ -1,6 +1,7 @@
 package clueGame;
 
 import java.awt.Color;
+import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -30,6 +31,11 @@ public abstract class Player {
 		this.position = myPosition;
 		this.color = myColor;
 		return this;
+	}
+	
+	public void drawPalyers(Graphics g){
+		g.setColor(color);
+		g.fillOval(position.getX(), position.getY(), position.getWidth() - 1, position.getHeight() - 1);
 	}
 	
 	public String getName() {
