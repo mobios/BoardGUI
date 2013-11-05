@@ -3,8 +3,6 @@ package clueGame;
 import java.awt.Color;
 import java.awt.Graphics;
 
-import javax.swing.CellEditor;
-
 public class RoomCell extends BoardCell {
 	private DoorDirection doorDirection;
 	private char roomInitial;
