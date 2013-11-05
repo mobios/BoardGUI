@@ -26,7 +26,7 @@ public class ControlPanel extends JPanel {
 	private static final long serialVersionUID = 5883166420109755868L;
 	private CluedoTextField whoseTurn;
 	private JButton next, accuse, suggest;
-	private SomePanel die, guess, guessResult;
+	private SomePanel die;
 
 	public ControlPanel() {
 		JFrame.setDefaultLookAndFeelDecorated(true);
@@ -84,5 +84,9 @@ public class ControlPanel extends JPanel {
 			add(label);
 			add(panelField);
 		}
+	}
+	
+	public void setPlayerTurnDisplay(String whoTurn){
+		whoseTurn.field.setText(whoTurn);
 	}
 }

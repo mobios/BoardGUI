@@ -39,6 +39,9 @@ public class ClueGame extends JFrame {
 	private ControlPanel controlPanel;
 	private Random randGen;//to refactor state checking
 	
+	private gameEngine engine;
+	private Thread engineThread;
+	
 	private JMenuBar menuBar;
 	private DetectiveNotes notes;
 	
@@ -84,16 +87,18 @@ public class ClueGame extends JFrame {
 		setBackground(Color.gray);
 		menuBar.add(createFileMenu());
 		
-		controlPanel = new ControlPanel();
+		setupControlPanel();
 		setTitle("Clue Game");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		add(board);
 		add(BorderLayout.SOUTH, controlPanel);
 	}
 
-	public void setupButtons(){
-		
+	public void setupControlPanel(){
+		controlPanel = new ControlPanel();
 	}
+	
+	
 	
 	public void updateBoard(){ // for the game display
 
@@ -558,6 +563,13 @@ public class ClueGame extends JFrame {
 		ClueGame game = new ClueGame();
 		game.setVisible(true);
 
+		startupMessages(game);
+		game.engine = game.new gameEngine();
+		game.engineThread = new Thread(game.engine);
+		game.engineThread.start();
+	}
+	
+	public static void startupMessages(ClueGame game){
 		JOptionPane.showMessageDialog(game, "You are the degenerate " + game.getHuman().getName() + ".\nThings seem off, because you can only recall"
 						+ " colors in RGB format; you have completely forgotten their associated names!\nYou are obsessed with " + Integer.toHexString(game.getHuman().getColor().getRGB()),
 						"Je vous presente Cluedo!", JOptionPane.INFORMATION_MESSAGE);
@@ -569,9 +581,6 @@ public class ClueGame extends JFrame {
 				+ " deduce the room he was murdered in to give his family closure.\nThe murder weapon will fetch quite a price on the Angolian Black Market. It will also allow you to break out of the Ch�teau.\n"
 				+ "The murderer will also need to meet with an 'unfortunate accident' for killing your second favorite professor.\n\nBonne chance!", "Que ferez-vous?", JOptionPane.INFORMATION_MESSAGE);
 		
-		Thread mainLoop = new Thread(game.new gameEngine());
-		mainLoop.start();
-
 	}
 	
 	public int calcIndex(BoardCell position) {
@@ -636,16 +645,19 @@ public class ClueGame extends JFrame {
 	private class gameEngine implements Runnable{
 		private boolean duringHuman;
 		
-		public void run(){
+		public synchronized void run(){
 			while(true){
 				Player person = nextPlayer();
+				controlPanel.setPlayerTurnDisplay(person.getName());
 				if(person.getClass() == HumanPlayer.class){
-					try {
-						duringHuman = true;
-						wait();
-						duringHuman = false;
-					} catch (InterruptedException e) {}
+					duringHuman = true;
+					while(duringHuman){
+						try {
+							wait();
+						} catch (InterruptedException e) {}
+					}
 				}
+				
 				else{
 					try {
 						Thread.sleep(1);
