@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 import clueGame.Card.CardType;
 
@@ -15,7 +16,7 @@ public abstract class Player {
 	private Color color;
 	private BoardCell position;
 	private Card roomPlayerIn;
-	private boolean targetChosen;
+	protected boolean turnFinished;
 	
 	Player(String name, ArrayList<Card> myCards, Color myColor, BoardCell myPosition){
 		this();
@@ -51,6 +52,14 @@ public abstract class Player {
 	
 	public void setPosition(BoardCell position) {
 		this.position = position;
+	}
+	
+	public int getRow() {
+		return position.getRow();
+	}
+	
+	public int getColumn() {
+		return position.getColumn();
 	}
 
 	public ArrayList<Card> getKnownCards() {
@@ -133,6 +142,8 @@ public abstract class Player {
 	
 	public abstract ArrayList<Card> accuse(Random rand);
 	
+	public abstract void makeMove(Random randGen, Board board);
+	
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
@@ -149,12 +160,20 @@ public abstract class Player {
 		return true;
 	}
 	
-	public boolean getTargetChosen() {
-		return targetChosen;
+	public boolean isHuman() {
+		return false;
 	}
 	
-	public void setTargetChosen(boolean b) {
-		targetChosen = b;
+	public boolean isComputer() {
+		return false;
+	}
+	
+	public boolean getTurnFinished() {
+		return turnFinished;
+	}
+	
+	public void setTurnFinished(boolean b) {
+		turnFinished = b;
 	}
 
 }

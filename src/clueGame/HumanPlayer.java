@@ -3,6 +3,7 @@ package clueGame;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Set;
 
 public class HumanPlayer extends Player {
 
@@ -27,4 +28,13 @@ public class HumanPlayer extends Player {
 		return null;
 	}
 
+	@Override
+	public void makeMove(Random randGen, Board board) {
+		
+	}
+	
+	@Override
+	public boolean isHuman() {
+		return true;
+	}
 }

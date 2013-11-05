@@ -3,6 +3,8 @@ package clueGame;
 import java.awt.Color;
 import java.awt.Graphics;
 
+import javax.swing.CellEditor;
+
 public class RoomCell extends BoardCell {
 	private DoorDirection doorDirection;
 	private char roomInitial;
@@ -26,8 +28,12 @@ public class RoomCell extends BoardCell {
 	
 	@Override
 	public void draw(Graphics g, Board b){
-		
-		g.setColor(Color.gray);
+
+		if (highlighted) {
+			g.setColor(Color.RED);
+		} else {
+			g.setColor(Color.GRAY);
+		}
 		g.fillRect(x, y, w, h);
 		if (this.doorDirection == DoorDirection.DOWN){
 			g.setColor(Color.BLUE);
