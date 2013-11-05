@@ -55,7 +55,7 @@ public class Board extends JPanel implements MouseListener {
 		rooms = new TreeMap<Character,String>();
 		cellsList = new ArrayList<BoardCell>();
 		targets = new HashSet<BoardCell>();
-		setSelectedCell(null);
+		selectedCell = null;
 		
 		if(legendFile == null || legendFile.isEmpty())
 			legendFile = "legend.txt";

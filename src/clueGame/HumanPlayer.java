@@ -28,8 +28,8 @@ public class HumanPlayer extends Player {
 	@Override
 	public void makeMove(Random randGen, Board board) {
 		setPosition(board.getSelectedCell());
-		//System.out.println("Row: " + board.getSelectedCell().getRow() +
-		//		", column: " + board.getSelectedCell().getColumn());
+		System.out.println("Row: " + board.getSelectedCell().getRow() +
+				", column: " + board.getSelectedCell().getColumn());
 	}
 
 	@Override

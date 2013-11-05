@@ -32,7 +32,6 @@ public class ClueGame extends JFrame {
 	private List<Card> solution;
 	private List<Player> players;
 	private int playerTurnIndex;
-	private Player currentPlayer;
 	private int dieRoll;
 	
 	private String playerConfig, CardsConfig;
@@ -73,7 +72,6 @@ public class ClueGame extends JFrame {
 		board = new Board();
 		boardLoad = true;
 		loadGameConfigFiles();
-		currentPlayer = players.get(playerTurnIndex);
 		deal();
 		selectAnswer();
 		
@@ -605,7 +603,6 @@ public class ClueGame extends JFrame {
 	
 	public void advancePlayersTurns(){
 		playerTurnIndex = ((playerTurnIndex+1) % players.size());
-		currentPlayer = players.get(playerTurnIndex);
 	}
 
 	public void setTurn(Player turn){
