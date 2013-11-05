@@ -1,6 +1,8 @@
 package clueGame;
 
 import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.util.ArrayList;
 
 public abstract class BoardCell {
@@ -40,6 +42,13 @@ public abstract class BoardCell {
 
 	public int getColumn() {
 		return column;
+	}
+	
+	public boolean containsClick(int mouseX, int mouseY) {
+		Rectangle rect = new Rectangle(column*scale, row*scale, width, height);
+		if (rect.contains(new Point(mouseX, mouseY))) 
+			return true;
+		return false;
 	}
 
 	@Override

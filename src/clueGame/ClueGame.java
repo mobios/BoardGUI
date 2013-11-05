@@ -94,25 +94,20 @@ public class ClueGame extends JFrame {
 	}
 
 	public void updateBoard(){ // for the game display
-
-
+		
 
 	}
 	
-	public void nextPlayer() {
+	public void nextPlayer() {		
+		//Still need to update the game control panel to display whose turn it is
 		
-		if (!players.get(playerTurnIndex).getTurnFinished()) {
-			advancePlayersTurns();
-			
-			//Still need to update the game control panel to display whose turn it is
-			
-			rollDie();
-			board.calcTargets(currentPlayer.getRow(), currentPlayer.getColumn(), dieRoll);
-			board.repaint(); //repaints the board to show the highlighted targets
-			currentPlayer.makeMove(randGen, board);
-			board.removeHighlights();
-			
-		}
+		rollDie();
+		board.calcTargets(currentPlayer.getRow(), currentPlayer.getColumn(), dieRoll);
+		board.repaint(); //repaints the board to show the highlighted targets
+		currentPlayer.makeMove(randGen, board);
+		board.repaint();
+		
+		board.removeHighlights();
 	}
 
 	private JMenu createFileMenu() { // to create a MenuBar Menu named file
@@ -568,6 +563,8 @@ public class ClueGame extends JFrame {
 				+ " deduce the room he was murdered in to give his family closure.\nThe murder weapon will fetch quite a price on the Angolian Black Market. It will also allow you to break out of the Ch�teau.\n"
 				+ "The murderer will also need to meet with an 'unfortunate accident' for killing your second favorite professor.\n\nBonne chance!", "Que ferez-vous?", JOptionPane.INFORMATION_MESSAGE);
 		
+		game.nextPlayer();
+		//game.board.repaint();
 		
 	}
 	

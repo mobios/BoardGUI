@@ -77,7 +77,6 @@ public class ComputerPlayer extends Player {
 	public void makeMove(Random randGen, Board board) {
 		hPrevCell = pickLocation(randGen, board.getTargets());
 		setPosition(hPrevCell);
-		board.repaint();
 		
 		//Needs to repaint the board
 	}

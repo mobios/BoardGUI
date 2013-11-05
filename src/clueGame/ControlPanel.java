@@ -29,11 +29,11 @@ public class ControlPanel extends JPanel {
 	private SomePanel die, guess, guessResult;
 
 	public ControlPanel() {
-		setSize(new Dimension(300, 300));
+		setSize(new Dimension(200, 300));
 		
 		JFrame.setDefaultLookAndFeelDecorated(true);
 			
-		setLayout(new GridLayout(0,2));
+		setLayout(new GridLayout(4,2));
 		
 		whoseTurn = new SomeTextField("Whose Turn?", 20);
 		add(whoseTurn);

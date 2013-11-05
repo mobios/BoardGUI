@@ -1,5 +1,8 @@
 package clueGame;
+
 import java.awt.Graphics;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -18,7 +21,7 @@ import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 
 
-public class Board extends JPanel {
+public class Board extends JPanel implements MouseListener {
 	private static final long serialVersionUID = 8728427497602838343L;
 	private ArrayList<BoardCell> cellsList;
 	private Map<Integer, LinkedList<Integer>> adjMtx;
@@ -28,6 +31,7 @@ public class Board extends JPanel {
 	private int numRows, numColumns;
 	ClueGame game;
 	private String legendFile, layoutFile;
+	private BoardCell selectedCell;
 	
 	public String getLegendFile() {
 		return legendFile;
@@ -51,6 +55,7 @@ public class Board extends JPanel {
 		rooms = new TreeMap<Character,String>();
 		cellsList = new ArrayList<BoardCell>();
 		targets = new HashSet<BoardCell>();
+		setSelectedCell(null);
 		
 		if(legendFile == null || legendFile.isEmpty())
 			legendFile = "legend.txt";
@@ -60,6 +65,8 @@ public class Board extends JPanel {
 		
 		loadConfigFiles();
 		calcAdjacencies();
+		
+		addMouseListener(this);
 	}
 	
 	public void paintComponent(Graphics g){ // used to draw the board
@@ -267,7 +274,7 @@ public class Board extends JPanel {
 	}
 	
 	public boolean inBounds(int index){
-		return (index < 0 || index > numRows*numColumns-1) ? false : true;
+		return !(index < 0 || index > numRows*numColumns-1);
 	}
 	
 	public LinkedList<Integer> calcImmediateAdj(int index){
@@ -360,6 +367,24 @@ public class Board extends JPanel {
 		}
 		visited[cell] = false;
 	}
+	
+	public void mouseClicked(MouseEvent e) {}
+	public void mouseEntered(MouseEvent e) {}
+	public void mouseExited(MouseEvent e) {}
+	public void mouseReleased(MouseEvent e) {}
+	
+	public void mousePressed(MouseEvent e)  {
+		setSelectedCell(null);
+		for (BoardCell cell : targets) {
+			if (cell.containsClick(e.getX(), e.getY())) {
+				setSelectedCell(cell);
+				break;
+			}
+		}
+		
+		if (getSelectedCell() == null)
+			System.out.println("Incompatible cell chosen.");
+	}  
 
 	public RoomCell getRoomCellAt( int row, int col){
 		if(cellsList.get(calcIndex(row, col)).isRoom())
@@ -401,5 +426,13 @@ public class Board extends JPanel {
 		for (BoardCell cell : cellsList) {
 			cell.setHighlighted(false);
 		}
+	}
+
+	public BoardCell getSelectedCell() {
+		return selectedCell;
+	}
+
+	public void setSelectedCell(BoardCell selectedCell) {
+		this.selectedCell = selectedCell;
 	}
 }
