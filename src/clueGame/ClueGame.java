@@ -528,14 +528,24 @@ public class ClueGame extends JFrame {
 		ClueGame game = new ClueGame();
 		game.setVisible(true);
 
-		JOptionPane.showMessageDialog(game, "$MSG_PLACEHOLDER", "$TITLE_PLACEHOLDER", JOptionPane.INFORMATION_MESSAGE);
+		JOptionPane.showMessageDialog(game, "You are the degenerate " + game.getHuman().getName() + ".\nThings seem off, because you can only recall"
+						+ " colors in RGB format; you have completely forgotten their assosiated names!\nYou are obsessed with " + Integer.toHexString(game.getHuman().getColor().getRGB()),
+						"Je vous présente Cluedo!", JOptionPane.INFORMATION_MESSAGE);
+		
+		JOptionPane.showMessageDialog(game, "You are calling on your second favorite professor, Dr. Black, who is an eccentric, affluent recluse with a penchant for collecting abnormal weapons."
+				+ "\nYour common sense begins to tingle, and you realize Dr. Black has been murdered!\nYou rush for the exit, but find none, as the house has only entrances.", "Où es-tu?", JOptionPane.INFORMATION_MESSAGE);
+	
+		JOptionPane.showMessageDialog(game, "Things are not looking well, gonze.\n\nThe late Dr. Black's remnants blend nicely with the thick layer of dust coating the house -- you must"
+				+ " deduce the room he was murdered in to give his family closure.\nThe murder weapon will fetch quite a price on the Angolian Black Market. It will also allow you to break out of the Château.\n"
+				+ "The murderer will also need to meet with an 'unfortunate accident' for killing your second favorite professor.\n\nBonne chance!", "Que ferez-vous?", JOptionPane.INFORMATION_MESSAGE);
+		
+		
 	}
-
+	
 	public int calcIndex(BoardCell position) {
 		return calcIndex(position.getRow(), position.getColumn());
 	}
 	
-
 	public Player getPlayersTurn() {
 		if(playerTurnIndex == -1)
 			return null;
@@ -579,4 +589,11 @@ public class ClueGame extends JFrame {
 		return rS;
 	}
 
+	public Player getHuman(){
+		for(Player p : players)
+			if(p.getClass() == HumanPlayer.class)
+				return p;
+		
+		return null;
+	}
 }
