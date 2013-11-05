@@ -85,10 +85,8 @@ public class ClueGame extends JFrame {
 		setExtendedState(Frame.MAXIMIZED_BOTH);
 		setTitle("Clue Game");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		add(BorderLayout.CENTER, board);
-		add(BorderLayout.SOUTH, controlPanel);
-		
-		//add(board);
+		add(board);
+		add(controlPanel);
 		
 	}
 
