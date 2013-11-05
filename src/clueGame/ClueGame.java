@@ -1,6 +1,9 @@
 package clueGame;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Frame;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
@@ -33,6 +36,7 @@ public class ClueGame extends JFrame {
 	private String playerConfig, CardsConfig;
 	private final int solutionNum = Card.CardType.size;
 	private Board board;
+	ControlPanel controlPanel;
 	private static boolean boardLoad = false, playerLoad = false, cardLoad = false, deal = false, sol = false;		//Most definately need
 	private Random randGen;																							//to refactor state checking
 	
@@ -76,7 +80,15 @@ public class ClueGame extends JFrame {
 		setBackground(Color.gray);
 		menuBar.add(createFileMenu());
 		
-		add(board);
+		controlPanel = new ControlPanel();
+		setLayout(new GridLayout(1,0));
+		setExtendedState(Frame.MAXIMIZED_BOTH);
+		setTitle("Clue Game");
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		add(BorderLayout.CENTER, board);
+		add(BorderLayout.SOUTH, controlPanel);
+		
+		//add(board);
 		
 	}
 
@@ -84,6 +96,10 @@ public class ClueGame extends JFrame {
 
 
 
+	}
+	
+	public void nextPlayer() {
+		
 	}
 
 	private JMenu createFileMenu() { // to create a MenuBar Menu named file
@@ -94,6 +110,7 @@ public class ClueGame extends JFrame {
 		return menu;
 
 	}
+	
 	private JMenuItem createFileExitItem(){
 
 		JMenuItem exitItem = new JMenuItem("Exit");

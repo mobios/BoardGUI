@@ -31,6 +31,9 @@ public class ComputerPlayer extends Player {
 			
 		BoardCell rnd = ((posDoor.size() > 0) ? posDoor.get(rgen.nextInt(posDoor.size())) : t.get(rgen.nextInt(t.size())));
 		hPrevCell = rnd;
+		if (rnd != null) {
+			setTargetChosen(true);
+		}
 		return rnd;
 	}
 

@@ -13,6 +13,8 @@ import java.util.Scanner;
 import java.util.Set;
 import java.util.TreeMap;
 
+import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 
 

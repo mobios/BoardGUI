@@ -15,6 +15,7 @@ public abstract class Player {
 	private Color color;
 	private BoardCell position;
 	private Card roomPlayerIn;
+	private boolean targetChosen;
 	
 	Player(String name, ArrayList<Card> myCards, Color myColor, BoardCell myPosition){
 		this();
@@ -146,6 +147,14 @@ public abstract class Player {
 		} else if (!name.equals(other.name))
 			return false;
 		return true;
+	}
+	
+	public boolean getTargetChosen() {
+		return targetChosen;
+	}
+	
+	public void setTargetChosen(boolean b) {
+		targetChosen = b;
 	}
 
 }
