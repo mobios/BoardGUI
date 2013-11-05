@@ -103,7 +103,6 @@ public class ClueGame extends JFrame {
 		
 		if (!players.get(playerTurnIndex).getTurnFinished()) {
 			advancePlayersTurns();
-			board.removeHighlights();
 			
 			//Still need to update the game control panel to display whose turn it is
 			
@@ -111,6 +110,7 @@ public class ClueGame extends JFrame {
 			board.calcTargets(currentPlayer.getRow(), currentPlayer.getColumn(), dieRoll);
 			board.repaint(); //repaints the board to show the highlighted targets
 			currentPlayer.makeMove(randGen, board);
+			board.removeHighlights();
 			
 		}
 	}
@@ -558,14 +558,14 @@ public class ClueGame extends JFrame {
 		game.setVisible(true);
 
 		JOptionPane.showMessageDialog(game, "You are the degenerate " + game.getHuman().getName() + ".\nThings seem off, because you can only recall"
-						+ " colors in RGB format; you have completely forgotten their assosiated names!\nYou are obsessed with " + Integer.toHexString(game.getHuman().getColor().getRGB()),
-						"Je vous présente Cluedo!", JOptionPane.INFORMATION_MESSAGE);
+						+ " colors in RGB format; you have completely forgotten their associated names!\nYou are obsessed with " + Integer.toHexString(game.getHuman().getColor().getRGB()),
+						"Je vous prï¿½sente Cluedo!", JOptionPane.INFORMATION_MESSAGE);
 		
 		JOptionPane.showMessageDialog(game, "You are calling on your second favorite professor, Dr. Black, who is an eccentric, affluent recluse with a penchant for collecting abnormal weapons."
-				+ "\nYour common sense begins to tingle, and you realize Dr. Black has been murdered!\nYou rush for the exit, but find none, as the house has only entrances.", "Où es-tu?", JOptionPane.INFORMATION_MESSAGE);
+				+ "\nYour common sense begins to tingle, and you realize Dr. Black has been murdered!\nYou rush for the exit, but find none, as the house has only entrances.", "Oï¿½ es-tu?", JOptionPane.INFORMATION_MESSAGE);
 	
 		JOptionPane.showMessageDialog(game, "Things are not looking well, gonze.\n\nThe late Dr. Black's remnants blend nicely with the thick layer of dust coating the house -- you must"
-				+ " deduce the room he was murdered in to give his family closure.\nThe murder weapon will fetch quite a price on the Angolian Black Market. It will also allow you to break out of the Château.\n"
+				+ " deduce the room he was murdered in to give his family closure.\nThe murder weapon will fetch quite a price on the Angolian Black Market. It will also allow you to break out of the Chï¿½teau.\n"
 				+ "The murderer will also need to meet with an 'unfortunate accident' for killing your second favorite professor.\n\nBonne chance!", "Que ferez-vous?", JOptionPane.INFORMATION_MESSAGE);
 		
 		
