@@ -32,7 +32,6 @@ public class ClueGame extends JFrame {
 	private List<Card> solution;
 	private List<Player> players;
 	private int playerTurnIndex;
-	private boolean duringHumanTurn;
 	private int dieRoll;
 	
 	private String playerConfig, CardsConfig;
@@ -90,16 +89,19 @@ public class ClueGame extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		add(board);
 		add(BorderLayout.SOUTH, controlPanel);
-		duringHumanTurn = true;
 	}
 
+	public void setupButtons(){
+		
+	}
+	
 	public void updateBoard(){ // for the game display
 
 
 
 	}
 	
-	public void nextPlayer() {
+	public Player nextPlayer() {
 		advancePlayersTurns();
 			
 		//Still need to update the game control panel to display whose turn it is
@@ -110,7 +112,9 @@ public class ClueGame extends JFrame {
 			
 		getPlayersTurn().doTurn(randGen, board);
 		board.removeHighlights();
-			
+		board.repaint();
+		
+		return getPlayersTurn();
 	}
 
 	private JMenu createFileMenu() { // to create a MenuBar Menu named file
@@ -538,20 +542,19 @@ public class ClueGame extends JFrame {
 		return list.get(rand.nextInt(list.size()));
 	}
 
-	public Board getBoard() {
+	public Board getBoard(){
 		return board;
 	}
 
-	public Random getRandGen() {
+	public Random getRandGen(){
 		return randGen;
 	}
 	
-	public void setPlayersDebugOnly(List<Player> players) {
+	public void setPlayersDebugOnly(List<Player> players){
 		this.players = players;
 	}
 
-	public static void main(String[] args) {
-		
+	public static void main(String[] args){
 		ClueGame game = new ClueGame();
 		game.setVisible(true);
 
@@ -566,7 +569,9 @@ public class ClueGame extends JFrame {
 				+ " deduce the room he was murdered in to give his family closure.\nThe murder weapon will fetch quite a price on the Angolian Black Market. It will also allow you to break out of the Ch�teau.\n"
 				+ "The murderer will also need to meet with an 'unfortunate accident' for killing your second favorite professor.\n\nBonne chance!", "Que ferez-vous?", JOptionPane.INFORMATION_MESSAGE);
 		
-		
+		Thread mainLoop = new Thread(game.new gameEngine());
+		mainLoop.start();
+
 	}
 	
 	public int calcIndex(BoardCell position) {
@@ -583,7 +588,7 @@ public class ClueGame extends JFrame {
 		playerTurnIndex = ((playerTurnIndex+1) % players.size());
 	}
 
-	public void setTurn(Player turn) {
+	public void setTurn(Player turn){
 		if(turn == null || !players.contains(turn)){
 			playerTurnIndex = -1;
 			return;
@@ -624,7 +629,33 @@ public class ClueGame extends JFrame {
 		return null;
 	}
 	
-	public void rollDie() {
+	public void rollDie(){
 		dieRoll = randGen.nextInt(6) + 1;
+	}
+
+	private class gameEngine implements Runnable{
+		private boolean duringHuman;
+		
+		public void run(){
+			while(true){
+				Player person = nextPlayer();
+				if(person.getClass() == HumanPlayer.class){
+					try {
+						duringHuman = true;
+						wait();
+						duringHuman = false;
+					} catch (InterruptedException e) {}
+				}
+				else{
+					try {
+						Thread.sleep(1);
+					} catch (InterruptedException e) {}
+				}
+			}
+		}
+		
+		public boolean isHuman(){
+			return duringHuman;
+		}
 	}
 }

@@ -160,14 +160,6 @@ public abstract class Player {
 		return true;
 	}
 	
-	public boolean isHuman() {
-		return false;
-	}
-	
-	public boolean isComputer() {
-		return false;
-	}
-	
 	public boolean getTurnFinished() {
 		return turnFinished;
 	}
