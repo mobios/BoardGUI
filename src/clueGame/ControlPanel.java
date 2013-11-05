@@ -89,4 +89,25 @@ public class ControlPanel extends JPanel {
 	public void setPlayerTurnDisplay(String whoTurn){
 		whoseTurn.field.setText(whoTurn);
 	}
+	
+	public void associateButtonListener(ActionListener handler, specifyButton whichButton){
+		switch(whichButton){
+		case NEXT:
+			next.addActionListener(handler);
+			break;
+			
+		case ACCUSE:
+			accuse.addActionListener(handler);
+			break;
+			
+		case SUGGEST:
+			suggest.addActionListener(handler);
+		}
+	}
+	
+	public enum specifyButton{
+		NEXT,
+		ACCUSE,
+		SUGGEST;
+	}
 }

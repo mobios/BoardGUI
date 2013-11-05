@@ -96,16 +96,16 @@ public class ClueGame extends JFrame {
 
 	public void setupControlPanel(){
 		controlPanel = new ControlPanel();
+		controlPanel.associateButtonListener(new NextPlayerListener(), ControlPanel.specifyButton.NEXT);
 	}
-	
-	
-	
-	public void updateBoard(){ // for the game display
-
-
-
+	public class NextPlayerListener implements ActionListener{
+		public void actionPerformed(ActionEvent e){
+			if(!engine.isHuman())
+				return;
+			
+			engine.advanceHuman();
+		}
 	}
-	
 	public Player nextPlayer() {
 		advancePlayersTurns();
 			
@@ -567,6 +567,16 @@ public class ClueGame extends JFrame {
 		game.engine = game.new gameEngine();
 		game.engineThread = new Thread(game.engine);
 		game.engineThread.start();
+		long start, elapsed;
+		while(true){
+			start = System.nanoTime();
+			game.repaint();
+			elapsed = System.nanoTime() - start;
+			if(16 < elapsed/1000000)
+				try {
+					Thread.sleep(16 - elapsed);
+				} catch (InterruptedException e) {}
+		}
 	}
 	
 	public static void startupMessages(ClueGame game){
@@ -668,6 +678,11 @@ public class ClueGame extends JFrame {
 		
 		public boolean isHuman(){
 			return duringHuman;
+		}
+		
+		public synchronized void advanceHuman(){
+			duringHuman = false;
+			notifyAll();
 		}
 	}
 }
