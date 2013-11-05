@@ -81,7 +81,7 @@ public class Board extends JPanel implements MouseListener {
 			cell.draw(g, this);
 		}
 		for (Player p: players){
-			p.drawPalyers(g);
+			p.drawPlayers(g);
 		}
 		
 	}

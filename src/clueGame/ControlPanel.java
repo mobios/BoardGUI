@@ -24,49 +24,56 @@ import javax.swing.border.TitledBorder;
 public class ControlPanel extends JPanel {
 	
 	private static final long serialVersionUID = 5883166420109755868L;
-	private SomeTextField whoseTurn;
-	private JButton next, accuse;
-	private SomePanel die, guess, guessResult;
+	private CluedoTextField whoseTurn;
+	private JButton next, accuse, suggest;
+	private SomePanel die;
 
 	public ControlPanel() {
+		JFrame.setDefaultLookAndFeelDecorated(true);
+
+		//setLayout(new GridLayout(0,2));
 		setSize(new Dimension(200, 300));
 		
 		JFrame.setDefaultLookAndFeelDecorated(true);
-			
-		setLayout(new GridLayout(4,2));
-		
-		whoseTurn = new SomeTextField("Whose Turn?", 20);
-		add(whoseTurn);
-		
+		//setLayout(new GridLayout(0,2));,
 		die = new SomePanel("Die", "Roll", 5);
-		add(die);
-		
-		next = new JButton("Next Player");
+		add(BorderLayout.WEST,die);
+
+		whoseTurn = new CluedoPresentationField("Whose Turn?", 20);
+		add(BorderLayout.WEST,whoseTurn);
+
+
+		suggest = new JButton("Make a suggestion");
 		accuse = new JButton("Make an Accusation");
-		add(next);
-		add(accuse);
-		
-		guess = new SomePanel("Guess", "Guess", 20);
-		add(guess);
-		
-		add(new JPanel());
-		
-		guessResult = new SomePanel("Guess Result", "Response", 10);
-		add(guessResult);
-		
+		next = new JButton("Next Player");
+
+		add(BorderLayout.EAST,suggest);
+		add(BorderLayout.EAST,accuse);
+		add(BorderLayout.EAST,next);
+
 		setVisible(true);		
 	}
 	
-	private class SomeTextField extends JPanel {
-		private JTextField field;
+	private class CluedoTextField extends JPanel {
+		protected JTextField field;
 		
-		public SomeTextField(String labelName, int textLength) {
+		public CluedoTextField(String labelName, int textLength) {
 			JLabel label = new JLabel(labelName);
 			field = new JTextField(textLength);
 			field.setFont(new Font("SansSerif", Font.BOLD, 12));
 			add(label);
 			add(field);
 		}
+	}
+	
+	private class CluedoPresentationField extends CluedoTextField{
+
+		public CluedoPresentationField(String labelName, int textLength) {
+			super(labelName, textLength);
+			field.enableInputMethods(false);
+			field.setEditable(false);
+		}
+		
 	}
 	
 	private class SomePanel extends JPanel {
@@ -81,5 +88,30 @@ public class ControlPanel extends JPanel {
 			add(label);
 			add(panelField);
 		}
+	}
+	
+	public void setPlayerTurnDisplay(String whoTurn){
+		whoseTurn.field.setText(whoTurn);
+	}
+	
+	public void associateButtonListener(ActionListener handler, specifyButton whichButton){
+		switch(whichButton){
+		case NEXT:
+			next.addActionListener(handler);
+			break;
+			
+		case ACCUSE:
+			accuse.addActionListener(handler);
+			break;
+			
+		case SUGGEST:
+			suggest.addActionListener(handler);
+		}
+	}
+	
+	public enum specifyButton{
+		NEXT,
+		ACCUSE,
+		SUGGEST;
 	}
 }

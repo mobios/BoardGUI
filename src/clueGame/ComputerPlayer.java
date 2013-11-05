@@ -80,9 +80,11 @@ public class ComputerPlayer extends Player {
 		
 		//Needs to repaint the board
 	}
-	
+
 	@Override
-	public boolean isComputer() {
-		return true;
+	public void doTurn(Random randGen, Board board) {
+		makeMove(randGen, board);
+		
+		
 	}
 }

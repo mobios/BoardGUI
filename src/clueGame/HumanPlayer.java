@@ -3,7 +3,6 @@ package clueGame;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.Set;
 
 public class HumanPlayer extends Player {
 
@@ -18,8 +17,6 @@ public class HumanPlayer extends Player {
 	@Override
 	public ArrayList<Card> accuse(Random unused){
 		return null;
-		
-		
 	}
 
 	@Override
@@ -34,9 +31,10 @@ public class HumanPlayer extends Player {
 		//System.out.println("Row: " + board.getSelectedCell().getRow() +
 		//		", column: " + board.getSelectedCell().getColumn());
 	}
-	
+
 	@Override
-	public boolean isHuman() {
-		return true;
+	public void doTurn(Random randGen, Board board) {
+		// TODO Auto-generated method stub
+		
 	}
 }

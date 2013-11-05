@@ -12,9 +12,9 @@ public abstract class BoardCell {
 	public BoardCell(int row, int column){
 		this.row = row;
 		this.column = column;
-		width = 32;
-		height = 32;
-		scale = 32;
+		width = 30;
+		height = 30;
+		scale = 30;
 		highlighted = false;
 	}
 	

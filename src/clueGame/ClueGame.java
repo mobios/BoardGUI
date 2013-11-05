@@ -1,7 +1,7 @@
 package clueGame;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Frame;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -38,12 +38,19 @@ public class ClueGame extends JFrame {
 	private String playerConfig, CardsConfig;
 	private final int solutionNum = Card.CardType.size;
 	private Board board;
-	ControlPanel controlPanel;
-	private static boolean boardLoad = false, playerLoad = false, cardLoad = false, deal = false, sol = false;		//Most definately need
+	private ControlPanel controlPanel;
+	private static boolean boardLoad = false, playerLoad = false, cardLoad = false, deal = false, sol = false;//Most definately need
 	private Random randGen;//to refactor state checking
+	
+	private gameEngine engine;
+	private Thread engineThread;
 	
 	private JMenuBar menuBar;
 	private DetectiveNotes notes;
+	
+	private final int solutionNum = Card.CardType.size;
+	private static boolean boardLoad = false, playerLoad = false, cardLoad = false, deal = false, sol = false;		//Most definately need
+
 	
 /*	public ClueGame(String pConfig, String cConfig, String lConfig, String legCongic){
 		this();
@@ -70,7 +77,6 @@ public class ClueGame extends JFrame {
 		board = new Board();
 		boardLoad = true;
 		loadGameConfigFiles();
-		currentPlayer = players.get(playerTurnIndex);
 		deal();
 		selectAnswer();
 		
@@ -78,27 +84,33 @@ public class ClueGame extends JFrame {
 		notes = new DetectiveNotes();
 		
 		setTitle("Clue Game");
-		setSize(1600, 900);
+		setSize(1300, 860);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setJMenuBar(menuBar);
 		setBackground(Color.gray);
 		menuBar.add(createFileMenu());
 		
-		controlPanel = new ControlPanel();
-		setLayout(new GridLayout(1,0));
+		setupControlPanel();
 		setTitle("Clue Game");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		add(board);
-		add(controlPanel);
-		
+		add(BorderLayout.SOUTH, controlPanel);
 	}
 
-	public void updateBoard(){ // for the game display
-		
-
-	}
-	
+        public void setupControlPanel(){                                                                        
+                controlPanel = new ControlPanel();                                                              
+                controlPanel.associateButtonListener(new NextPlayerListener(), ControlPanel.specifyButton.NEXT);
+        }                                                                                                       
+        public class NextPlayerListener implements ActionListener{                                              
+                public void actionPerformed(ActionEvent e){                                                     
+                        if(!engine.isHuman())                                                                   
+                                return;                                                                         
+                                                                                                                
+                        engine.advanceHuman();                                                                  
+                }                                                                                               
+        }                                                                                                       	
 	public void nextPlayer() {		
+		advancePlayersTurns();
 		//Still need to update the game control panel to display whose turn it is
 		
 		rollDie();
@@ -108,6 +120,33 @@ public class ClueGame extends JFrame {
 		board.repaint();
 		
 		board.removeHighlights();
+=======
+	public void setupControlPanel(){
+		controlPanel = new ControlPanel();
+		controlPanel.associateButtonListener(new NextPlayerListener(), ControlPanel.specifyButton.NEXT);
+	}
+	public class NextPlayerListener implements ActionListener{
+		public void actionPerformed(ActionEvent e){
+			if(!engine.isHuman())
+				return;
+			
+			engine.advanceHuman();
+		}
+	}
+	public Player nextPlayer() {
+		advancePlayersTurns();
+			
+		//Still need to update the game control panel to display whose turn it is
+			
+		rollDie();
+		board.calcTargets(getPlayersTurn().getRow(), getPlayersTurn().getColumn(), dieRoll);
+		board.repaint(); //repaints the board to show the highlighted targets
+			
+		getPlayersTurn().doTurn(randGen, board);
+		board.removeHighlights();
+		board.repaint();
+		
+		return getPlayersTurn();
 	}
 
 	private JMenu createFileMenu() { // to create a MenuBar Menu named file
@@ -535,36 +574,49 @@ public class ClueGame extends JFrame {
 		return list.get(rand.nextInt(list.size()));
 	}
 
-	public Board getBoard() {
+	public Board getBoard(){
 		return board;
 	}
 
-	public Random getRandGen() {
+	public Random getRandGen(){
 		return randGen;
 	}
 	
-	public void setPlayersDebugOnly(List<Player> players) {
+	public void setPlayersDebugOnly(List<Player> players){
 		this.players = players;
 	}
 
-	public static void main(String[] args) {
-		
+	public static void main(String[] args){
 		ClueGame game = new ClueGame();
 		game.setVisible(true);
 
+		startupMessages(game);
+		game.engine = game.new gameEngine();
+		game.engineThread = new Thread(game.engine);
+		game.engineThread.start();
+		long start, elapsed;
+		while(true){
+			start = System.nanoTime();
+			game.repaint();
+			elapsed = System.nanoTime() - start;
+			if(16 < elapsed/1000000)
+				try {
+					Thread.sleep(16 - elapsed);
+				} catch (InterruptedException e) {}
+		}
+	}
+	
+	public static void startupMessages(ClueGame game){
 		JOptionPane.showMessageDialog(game, "You are the degenerate " + game.getHuman().getName() + ".\nThings seem off, because you can only recall"
 						+ " colors in RGB format; you have completely forgotten their associated names!\nYou are obsessed with " + Integer.toHexString(game.getHuman().getColor().getRGB()),
-						"Je vous pr�sente Cluedo!", JOptionPane.INFORMATION_MESSAGE);
+						"Je vous presente Cluedo!", JOptionPane.INFORMATION_MESSAGE);
 		
 		JOptionPane.showMessageDialog(game, "You are calling on your second favorite professor, Dr. Black, who is an eccentric, affluent recluse with a penchant for collecting abnormal weapons."
-				+ "\nYour common sense begins to tingle, and you realize Dr. Black has been murdered!\nYou rush for the exit, but find none, as the house has only entrances.", "O� es-tu?", JOptionPane.INFORMATION_MESSAGE);
+				+ "\nYour common sense begins to tingle, and you realize Dr. Black has been murdered!\nYou rush for the exit, but find none, as the house has only entrances.", "Ou es-tu?", JOptionPane.INFORMATION_MESSAGE);
 	
 		JOptionPane.showMessageDialog(game, "Things are not looking well, gonze.\n\nThe late Dr. Black's remnants blend nicely with the thick layer of dust coating the house -- you must"
 				+ " deduce the room he was murdered in to give his family closure.\nThe murder weapon will fetch quite a price on the Angolian Black Market. It will also allow you to break out of the Ch�teau.\n"
 				+ "The murderer will also need to meet with an 'unfortunate accident' for killing your second favorite professor.\n\nBonne chance!", "Que ferez-vous?", JOptionPane.INFORMATION_MESSAGE);
-		
-		game.nextPlayer();
-		//game.board.repaint();
 		
 	}
 	
@@ -580,10 +632,9 @@ public class ClueGame extends JFrame {
 	
 	public void advancePlayersTurns(){
 		playerTurnIndex = ((playerTurnIndex+1) % players.size());
-		currentPlayer = players.get(playerTurnIndex);
 	}
 
-	public void setTurn(Player turn) {
+	public void setTurn(Player turn){
 		if(turn == null || !players.contains(turn)){
 			playerTurnIndex = -1;
 			return;
@@ -624,7 +675,41 @@ public class ClueGame extends JFrame {
 		return null;
 	}
 	
-	public void rollDie() {
+	public void rollDie(){
 		dieRoll = randGen.nextInt(6) + 1;
+	}
+
+	private class gameEngine implements Runnable{
+		private boolean duringHuman;
+		
+		public synchronized void run(){
+			while(true){
+				Player person = nextPlayer();
+				controlPanel.setPlayerTurnDisplay(person.getName());
+				if(person.getClass() == HumanPlayer.class){
+					duringHuman = true;
+					while(duringHuman){
+						try {
+							wait();
+						} catch (InterruptedException e) {}
+					}
+				}
+				
+				else{
+					try {
+						Thread.sleep(1);
+					} catch (InterruptedException e) {}
+				}
+			}
+		}
+		
+		public boolean isHuman(){
+			return duringHuman;
+		}
+		
+		public synchronized void advanceHuman(){
+			duringHuman = false;
+			notifyAll();
+		}
 	}
 }
