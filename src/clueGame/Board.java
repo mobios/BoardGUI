@@ -74,7 +74,7 @@ public class Board extends JPanel {
 			cell.draw(g, this);
 		}
 		for (Player p: players){
-			p.drawPalyers(g);
+			p.drawPlayers(g);
 		}
 		
 	}

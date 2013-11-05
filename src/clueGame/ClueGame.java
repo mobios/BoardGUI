@@ -1,7 +1,7 @@
 package clueGame;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Frame;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -32,18 +32,20 @@ public class ClueGame extends JFrame {
 	private List<Card> solution;
 	private List<Player> players;
 	private int playerTurnIndex;
-	private Player currentPlayer;
+	private boolean duringHumanTurn;
 	private int dieRoll;
 	
 	private String playerConfig, CardsConfig;
-	private final int solutionNum = Card.CardType.size;
 	private Board board;
-	ControlPanel controlPanel;
-	private static boolean boardLoad = false, playerLoad = false, cardLoad = false, deal = false, sol = false;		//Most definately need
+	private ControlPanel controlPanel;
 	private Random randGen;//to refactor state checking
 	
 	private JMenuBar menuBar;
 	private DetectiveNotes notes;
+	
+	private final int solutionNum = Card.CardType.size;
+	private static boolean boardLoad = false, playerLoad = false, cardLoad = false, deal = false, sol = false;		//Most definately need
+
 	
 /*	public ClueGame(String pConfig, String cConfig, String lConfig, String legCongic){
 		this();
@@ -70,7 +72,6 @@ public class ClueGame extends JFrame {
 		board = new Board();
 		boardLoad = true;
 		loadGameConfigFiles();
-		currentPlayer = players.get(playerTurnIndex);
 		deal();
 		selectAnswer();
 		
@@ -78,19 +79,18 @@ public class ClueGame extends JFrame {
 		notes = new DetectiveNotes();
 		
 		setTitle("Clue Game");
-		setSize(1600, 900);
+		setSize(1300, 860);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setJMenuBar(menuBar);
 		setBackground(Color.gray);
 		menuBar.add(createFileMenu());
 		
 		controlPanel = new ControlPanel();
-		setLayout(new GridLayout(1,0));
 		setTitle("Clue Game");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		add(board);
-		add(controlPanel);
-		
+		add(BorderLayout.SOUTH, controlPanel);
+		duringHumanTurn = true;
 	}
 
 	public void updateBoard(){ // for the game display
@@ -100,19 +100,17 @@ public class ClueGame extends JFrame {
 	}
 	
 	public void nextPlayer() {
-		
-		if (!players.get(playerTurnIndex).getTurnFinished()) {
-			advancePlayersTurns();
+		advancePlayersTurns();
 			
-			//Still need to update the game control panel to display whose turn it is
+		//Still need to update the game control panel to display whose turn it is
 			
-			rollDie();
-			board.calcTargets(currentPlayer.getRow(), currentPlayer.getColumn(), dieRoll);
-			board.repaint(); //repaints the board to show the highlighted targets
-			currentPlayer.makeMove(randGen, board);
-			board.removeHighlights();
+		rollDie();
+		board.calcTargets(getPlayersTurn().getRow(), getPlayersTurn().getColumn(), dieRoll);
+		board.repaint(); //repaints the board to show the highlighted targets
 			
-		}
+		getPlayersTurn().doTurn(randGen, board);
+		board.removeHighlights();
+			
 	}
 
 	private JMenu createFileMenu() { // to create a MenuBar Menu named file
@@ -559,10 +557,10 @@ public class ClueGame extends JFrame {
 
 		JOptionPane.showMessageDialog(game, "You are the degenerate " + game.getHuman().getName() + ".\nThings seem off, because you can only recall"
 						+ " colors in RGB format; you have completely forgotten their associated names!\nYou are obsessed with " + Integer.toHexString(game.getHuman().getColor().getRGB()),
-						"Je vous pr�sente Cluedo!", JOptionPane.INFORMATION_MESSAGE);
+						"Je vous presente Cluedo!", JOptionPane.INFORMATION_MESSAGE);
 		
 		JOptionPane.showMessageDialog(game, "You are calling on your second favorite professor, Dr. Black, who is an eccentric, affluent recluse with a penchant for collecting abnormal weapons."
-				+ "\nYour common sense begins to tingle, and you realize Dr. Black has been murdered!\nYou rush for the exit, but find none, as the house has only entrances.", "O� es-tu?", JOptionPane.INFORMATION_MESSAGE);
+				+ "\nYour common sense begins to tingle, and you realize Dr. Black has been murdered!\nYou rush for the exit, but find none, as the house has only entrances.", "Ou es-tu?", JOptionPane.INFORMATION_MESSAGE);
 	
 		JOptionPane.showMessageDialog(game, "Things are not looking well, gonze.\n\nThe late Dr. Black's remnants blend nicely with the thick layer of dust coating the house -- you must"
 				+ " deduce the room he was murdered in to give his family closure.\nThe murder weapon will fetch quite a price on the Angolian Black Market. It will also allow you to break out of the Ch�teau.\n"
@@ -583,7 +581,6 @@ public class ClueGame extends JFrame {
 	
 	public void advancePlayersTurns(){
 		playerTurnIndex = ((playerTurnIndex+1) % players.size());
-		currentPlayer = players.get(playerTurnIndex);
 	}
 
 	public void setTurn(Player turn) {

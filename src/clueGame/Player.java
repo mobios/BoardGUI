@@ -35,7 +35,7 @@ public abstract class Player {
 		return this;
 	}
 	
-	public void drawPalyers(Graphics g){
+	public void drawPlayers(Graphics g){
 		g.setColor(color);
 		g.fillOval(position.getX(), position.getY(), position.getWidth() - 1, position.getHeight() - 1);
 	}
@@ -141,6 +141,8 @@ public abstract class Player {
 	public abstract ArrayList<Card> accuse(Random rand);
 	
 	public abstract void makeMove(Random randGen, Board board);
+	public abstract void doTurn(Random randGen, Board board);
+	
 	
 	public boolean equals(Object obj) {
 		if (this == obj)

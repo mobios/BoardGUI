@@ -18,8 +18,6 @@ public class HumanPlayer extends Player {
 	@Override
 	public ArrayList<Card> accuse(Random unused){
 		return null;
-		
-		
 	}
 
 	@Override
@@ -36,5 +34,11 @@ public class HumanPlayer extends Player {
 	@Override
 	public boolean isHuman() {
 		return true;
+	}
+
+	@Override
+	public void doTurn(Random randGen, Board board) {
+		// TODO Auto-generated method stub
+		
 	}
 }
