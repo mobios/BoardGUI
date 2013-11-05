@@ -1,6 +1,9 @@
 package clueGame;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Frame;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
@@ -30,12 +33,15 @@ public class ClueGame extends JFrame {
 	private List<Card> solution;
 	private List<Player> players;
 	private int playerTurnIndex;
+	private Player currentPlayer;
+	private int dieRoll;
 	
 	private String playerConfig, CardsConfig;
 	private final int solutionNum = Card.CardType.size;
 	private Board board;
+	ControlPanel controlPanel;
 	private static boolean boardLoad = false, playerLoad = false, cardLoad = false, deal = false, sol = false;		//Most definately need
-	private Random randGen;																							//to refactor state checking
+	private Random randGen;//to refactor state checking
 	
 	private JMenuBar menuBar;
 	private DetectiveNotes notes;
@@ -58,12 +64,14 @@ public class ClueGame extends JFrame {
 		players = new ArrayList<Player>();
 		randGen = new Random(0);
 		playerTurnIndex = 0;
+		dieRoll = 0;
 		
 		playerConfig = "players.txt";
 		CardsConfig = "cards.txt";
 		board = new Board();
 		boardLoad = true;
 		loadGameConfigFiles();
+		currentPlayer = players.get(playerTurnIndex);
 		deal();
 		selectAnswer();
 		
@@ -77,7 +85,13 @@ public class ClueGame extends JFrame {
 		setBackground(Color.gray);
 		menuBar.add(createFileMenu());
 		
+		controlPanel = new ControlPanel();
+		setLayout(new GridLayout(1,0));
+		setExtendedState(Frame.MAXIMIZED_BOTH);
+		setTitle("Clue Game");
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		add(board);
+		add(controlPanel);
 		
 	}
 
@@ -85,6 +99,22 @@ public class ClueGame extends JFrame {
 
 
 
+	}
+	
+	public void nextPlayer() {
+		
+		if (!players.get(playerTurnIndex).getTurnFinished()) {
+			advancePlayersTurns();
+			board.removeHighlights();
+			
+			//Still need to update the game control panel to display whose turn it is
+			
+			rollDie();
+			board.calcTargets(currentPlayer.getRow(), currentPlayer.getColumn(), dieRoll);
+			board.repaint(); //repaints the board to show the highlighted targets
+			currentPlayer.makeMove(randGen, board);
+			
+		}
 	}
 
 	private JMenu createFileMenu() { // to create a MenuBar Menu named file
@@ -95,6 +125,7 @@ public class ClueGame extends JFrame {
 		return menu;
 
 	}
+	
 	private JMenuItem createFileExitItem(){
 
 		JMenuItem exitItem = new JMenuItem("Exit");
@@ -554,6 +585,7 @@ public class ClueGame extends JFrame {
 	
 	public void advancePlayersTurns(){
 		playerTurnIndex = ((playerTurnIndex+1) % players.size());
+		currentPlayer = players.get(playerTurnIndex);
 	}
 
 	public void setTurn(Player turn) {
@@ -595,5 +627,9 @@ public class ClueGame extends JFrame {
 				return p;
 		
 		return null;
+	}
+	
+	public void rollDie() {
+		dieRoll = randGen.nextInt(6) + 1;
 	}
 }

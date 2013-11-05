@@ -13,6 +13,8 @@ import java.util.Scanner;
 import java.util.Set;
 import java.util.TreeMap;
 
+import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 
 
@@ -66,6 +68,9 @@ public class Board extends JPanel {
 		ArrayList<Player> players = game.getPlayers();
 		
 		for (BoardCell cell: cellsList){
+			if (targets.contains(cell)) {
+				cell.setHighlighted(true);
+			}
 			cell.draw(g, this);
 		}
 		for (Player p: players){
@@ -391,5 +396,10 @@ public class Board extends JPanel {
 	public int getNumColumns() {
 		return numColumns;
 	}
-		
+	
+	public void removeHighlights() {
+		for (BoardCell cell : cellsList) {
+			cell.setHighlighted(false);
+		}
+	}
 }

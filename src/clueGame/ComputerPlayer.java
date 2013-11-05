@@ -31,6 +31,9 @@ public class ComputerPlayer extends Player {
 			
 		BoardCell rnd = ((posDoor.size() > 0) ? posDoor.get(rgen.nextInt(posDoor.size())) : t.get(rgen.nextInt(t.size())));
 		hPrevCell = rnd;
+		if (rnd != null) {
+			turnFinished = true;
+		}
 		return rnd;
 	}
 
@@ -69,4 +72,18 @@ public class ComputerPlayer extends Player {
 		
 		return ret;
 	}	
+	
+	@Override
+	public void makeMove(Random randGen, Board board) {
+		hPrevCell = pickLocation(randGen, board.getTargets());
+		setPosition(hPrevCell);
+		board.repaint();
+		
+		//Needs to repaint the board
+	}
+	
+	@Override
+	public boolean isComputer() {
+		return true;
+	}
 }

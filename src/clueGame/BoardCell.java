@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 public abstract class BoardCell {
 	private int row, column, width, height, scale;
+	protected boolean highlighted;
 	
 	public BoardCell(int row, int column){
 		this.row = row;
@@ -12,6 +13,11 @@ public abstract class BoardCell {
 		width = 30;
 		height = 30;
 		scale = 32;
+		highlighted = false;
+	}
+	
+	public void setHighlighted(boolean b) {
+		highlighted = b;
 	}
 	
 	public boolean isWalkway(){
