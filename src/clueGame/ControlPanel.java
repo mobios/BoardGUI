@@ -23,16 +23,17 @@ import javax.swing.border.TitledBorder;
 
 public class ControlPanel extends JPanel {
 	
+	private static final long serialVersionUID = 5883166420109755868L;
 	private SomeTextField whoseTurn;
 	private JButton next, accuse;
 	private SomePanel die, guess, guessResult;
 
 	public ControlPanel() {
-		setSize(new Dimension(1000, 300));
+		setSize(new Dimension(300, 300));
 		
 		JFrame.setDefaultLookAndFeelDecorated(true);
 			
-		setLayout(new GridLayout(4,2));
+		setLayout(new GridLayout(0,2));
 		
 		whoseTurn = new SomeTextField("Whose Turn?", 20);
 		add(whoseTurn);

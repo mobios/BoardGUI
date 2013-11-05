@@ -1,6 +1,5 @@
 package clueGame;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Frame;
 import java.awt.GridLayout;
@@ -79,7 +78,7 @@ public class ClueGame extends JFrame {
 		notes = new DetectiveNotes();
 		
 		setTitle("Clue Game");
-		setSize(783, 827);
+		setSize(1600, 900);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setJMenuBar(menuBar);
 		setBackground(Color.gray);
@@ -87,7 +86,6 @@ public class ClueGame extends JFrame {
 		
 		controlPanel = new ControlPanel();
 		setLayout(new GridLayout(1,0));
-		setExtendedState(Frame.MAXIMIZED_BOTH);
 		setTitle("Clue Game");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		add(board);
