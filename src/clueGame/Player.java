@@ -3,16 +3,18 @@ package clueGame;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import clueGame.Card.CardType;
 
 public abstract class Player {
 	private String name;
-	protected ArrayList<Card> myCards;
-	protected ArrayList<Card> knownCards;
+	protected List<Card> myCards;
+	protected List<Card> knownCards;
 	private Color color;
 	private BoardCell position;
+	private Card roomPlayerIn;
 	
 	Player(String name, ArrayList<Card> myCards, Color myColor, BoardCell myPosition){
 		this();
@@ -51,7 +53,7 @@ public abstract class Player {
 	}
 
 	public ArrayList<Card> getKnownCards() {
-		return knownCards;
+		return ((knownCards.getClass() == ArrayList.class) ? (ArrayList<Card>)(knownCards) : new ArrayList<Card>(knownCards));
 	}
 
 	public void setKnownCards(ArrayList<Card> knownCards) {
@@ -63,7 +65,7 @@ public abstract class Player {
 	}
 
 	public ArrayList<Card> getMyCards() {
-		return myCards;
+		return ((myCards.getClass() == ArrayList.class) ? (ArrayList<Card>)(myCards) : new ArrayList<Card>(myCards));
 	}
 	
 	public ArrayList<CardType> getCardTypes(){
@@ -101,24 +103,49 @@ public abstract class Player {
 		knownCards.add(exposedCard);
 	}
 
+	public abstract ArrayList<Card> generateSuggestion(Random rand);
 	public void setMyCards(ArrayList<Card> myCards) {
 		this.myCards = myCards;
 	}
 
-	public ArrayList<Card> skc(ArrayList<Card> source){
+	public void setRoomPlayerIn(Card roomPlayerIn) {
+		this.roomPlayerIn = roomPlayerIn;
+	}
+
+	public Card getRoomPlayerIn() {
+		return roomPlayerIn;
+	}
+	
+	public ArrayList<Card> sieveKnownCards(ArrayList<Card> source){
 		ArrayList<Card> ret = new ArrayList<Card>(source);
 		ret.removeAll(myCards);
 		ret.removeAll(knownCards);
 		return ret;
 	}
 	
-	public Card disproveSuggestion(Random rand, ArrayList<Card> params){
+	public Card disproveSuggestion(Random rand, List<Card> params){
 		ArrayList<Card> paramCopy = new ArrayList<Card>(params);
 		params.removeAll(myCards);
 		paramCopy.removeAll(params);
 		return ((paramCopy.size() > 0 ) ? ClueGame.getRandFromCollection(rand, paramCopy) : null);
 	}
 	
-	public abstract ArrayList<Card> generateSuggestion(Random rand, Card room);
 	public abstract ArrayList<Card> accuse(Random rand);
+	
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Player other = (Player) obj;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		return true;
+	}
+
 }

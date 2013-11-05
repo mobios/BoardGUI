@@ -6,6 +6,7 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
 public class PanelRoomGuess extends JPanel{
+	private static final long serialVersionUID = 8744913873013883248L;
 	private JComboBox<String> roomGuessCombo;
 	
 	PanelRoomGuess(){

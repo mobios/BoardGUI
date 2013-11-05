@@ -8,6 +8,7 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
 public class PanelPersonGuess extends JPanel {
+	private static final long serialVersionUID = -691069948068484320L;
 	private JComboBox<String> personGuessCombo;
 	
 	public PanelPersonGuess(){

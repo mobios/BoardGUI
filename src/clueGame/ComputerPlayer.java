@@ -57,16 +57,16 @@ public class ComputerPlayer extends Player {
 	}
 
 	@Override
-	public ArrayList<Card> generateSuggestion(Random rand, Card room) {
-		ArrayList<Card> ret = new ArrayList<Card>();
-		ret.add(room);
+	public ArrayList<Card> generateSuggestion(Random rand) {
 		
-		ArrayList<Card> personCards = skc(ClueGame.getAllPeopleCards());
-		ArrayList<Card> weaponCards = skc(ClueGame.getAllWeaponCards());
+		ArrayList<Card> ret = new ArrayList<Card>();
+		ret.add(this.getRoomPlayerIn());
+		
+		ArrayList<Card> personCards = sieveKnownCards(ClueGame.getAllPeopleCards());
+		ArrayList<Card> weaponCards = sieveKnownCards(ClueGame.getAllWeaponCards());
 		ret.add(ClueGame.getRandFromCollection(rand, personCards));
 		ret.add(ClueGame.getRandFromCollection(rand, weaponCards));
 		
 		return ret;
-	}
-	
+	}	
 }

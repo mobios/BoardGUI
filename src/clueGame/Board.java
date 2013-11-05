@@ -17,7 +17,7 @@ import javax.swing.JPanel;
 
 
 public class Board extends JPanel {
-	
+	private static final long serialVersionUID = 8728427497602838343L;
 	private ArrayList<BoardCell> cellsList;
 	private Map<Integer, LinkedList<Integer>> adjMtx;
 	private Map<Character,String> rooms;

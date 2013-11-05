@@ -8,7 +8,7 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
 public class PanelWeapons extends JPanel{
-	
+	private static final long serialVersionUID = 4225677045812288631L;
 	JCheckBox shurikenBox, claymoreBox, icePickBox, polearmBox, nightshadeBox, claymoreMineBox, garroteBox;
 	
 	public PanelWeapons(){

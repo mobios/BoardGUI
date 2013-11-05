@@ -6,6 +6,7 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
 public class PanelWeaponGuess extends JPanel {
+	private static final long serialVersionUID = -1990477964137845401L;
 	private JComboBox<String> weaponGuessCombo;
 	
 	public PanelWeaponGuess(){

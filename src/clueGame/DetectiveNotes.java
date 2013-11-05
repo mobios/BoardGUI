@@ -5,7 +5,7 @@ import java.awt.GridLayout;
 import javax.swing.JDialog;
 
 public class DetectiveNotes  extends JDialog {
-	
+	private static final long serialVersionUID = 7258315283132574365L;
 	PanelPeople peoplePanel;
 	PanelRooms roomsPanel;
 	PanelWeapons weaponsPanel;

@@ -8,7 +8,7 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
 public class PanelPeople extends JPanel {
-	
+	private static final long serialVersionUID = 4309517310948422747L;
 	JCheckBox  colMustardBox, missPBox, dHarryBox, kLazarusBox, tSpeedmanBox, aHepburnBox;
 	
 	public PanelPeople(){

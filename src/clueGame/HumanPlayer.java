@@ -22,7 +22,7 @@ public class HumanPlayer extends Player {
 	}
 
 	@Override
-	public ArrayList<Card> generateSuggestion(Random rand, Card room) {
+	public ArrayList<Card> generateSuggestion(Random rand) {
 		// TODO Auto-generated method stub
 		return null;
 	}

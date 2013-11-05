@@ -8,8 +8,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
@@ -20,13 +20,15 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
 public class ClueGame extends JFrame {
+	private static final long serialVersionUID = 1409857978233118403L;
 	private static ArrayList<Card> allCards;
 	private static ArrayList<Card> allRoomCards;
 	private static ArrayList<Card> allPeopleCards;
 	private static ArrayList<Card> allWeaponCards;
 	
-	private ArrayList<Card> solution;
-	private ArrayList<Player> players;
+	private List<Card> solution;
+	private List<Player> players;
+	private int playerTurnIndex;
 	
 	private String playerConfig, CardsConfig;
 	private final int solutionNum = Card.CardType.size;
@@ -54,6 +56,7 @@ public class ClueGame extends JFrame {
 		solution = new ArrayList<Card>();
 		players = new ArrayList<Player>();
 		randGen = new Random(0);
+		playerTurnIndex = 0;
 		
 		playerConfig = "players.txt";
 		CardsConfig = "cards.txt";
@@ -76,9 +79,6 @@ public class ClueGame extends JFrame {
 		add(board);
 		
 	}
-
-
-
 
 	public void updateBoard(){ // for the game display
 
@@ -123,7 +123,6 @@ public class ClueGame extends JFrame {
 		dNotesItem.addActionListener(new MenuItemListener());
 		return dNotesItem;
 	}
-
 
 	public void setDebugSeed(long seed){
 		randGen.setSeed(seed);
@@ -401,14 +400,14 @@ public class ClueGame extends JFrame {
 
 	private boolean checkAccusation(ArrayList<Card> cards){// INTERNAL CLASS USE ONLY
 		assertState(sol, "All CheckAccusation()'s", "deal()");
-		boolean debugbreakout =  solution.containsAll(Arrays.asList(cards));
+		boolean debugbreakout =  solution.containsAll(cards);
 		if(debugbreakout && solution.size() == cards.size())
 			return true;
 		return false;
 	}
 	
 	public ArrayList<Player> getPlayers() {
-		return players;
+		return ((players.getClass() == ArrayList.class) ? (ArrayList<Player>) players : new ArrayList<Player>(players));
 	}
 	
 	public int calcIndex(int rows, int cols){
@@ -429,13 +428,13 @@ public class ClueGame extends JFrame {
 		return ret;
 	}
 
-	private Player randPlayer(ArrayList<Player> listArg){
-		if(listArg == null || listArg.isEmpty())
+	private Player randPlayer(List<Player> players2){
+		if(players2 == null || players2.isEmpty())
 			return null;
 		int possibleIndex=-1;
-		while(possibleIndex < 0 || possibleIndex >= listArg.size())
-			possibleIndex = Math.round(listArg.size()-1 * randGen.nextFloat());
-		return listArg.get(possibleIndex);
+		while(possibleIndex < 0 || possibleIndex >= players2.size())
+			possibleIndex = Math.round(players2.size()-1 * randGen.nextFloat());
+		return players2.get(possibleIndex);
 	}
 
 	public static ArrayList<Card> getAllCards() {
@@ -519,11 +518,63 @@ public class ClueGame extends JFrame {
 		return randGen;
 	}
 	
+	public void setPlayersDebugOnly(List<Player> players) {
+		this.players = players;
+	}
+
 	public static void main(String[] args) {
 		
 		ClueGame game = new ClueGame();
 		game.setVisible(true);
 		
 	}
+
+	public int calcIndex(BoardCell position) {
+		return calcIndex(position.getRow(), position.getColumn());
+	}
 	
+
+	public Player getPlayersTurn() {
+		if(playerTurnIndex == -1)
+			return null;
+		return players.get(playerTurnIndex % players.size());
+	}
+	
+	public void advancePlayersTurns(){
+		playerTurnIndex = ((playerTurnIndex+1) % players.size());
+	}
+
+	public void setTurn(Player turn) {
+		if(turn == null || !players.contains(turn)){
+			playerTurnIndex = -1;
+			return;
+		}
+		playerTurnIndex = 0;
+		while(!getPlayersTurn().equals(turn)){
+			advancePlayersTurns();
+		}
+	}
+	
+	public Collection<Card> suggestionMade(){
+		return suggestionMade(null);
+	}
+	
+	public Collection<Card> suggestionMade(List<Card> suggestion){
+		HashSet<Card> rS = new HashSet<Card>();
+		for(Player player : players){
+			if(player.equals(getPlayersTurn())){
+				suggestion = ((suggestion == null) ? player.generateSuggestion(getRandGen()) : suggestion);
+				continue;
+			}
+			Card toAdd = player.disproveSuggestion(getRandGen(), suggestion);
+			if(toAdd != null)
+				rS.add(toAdd);
+				
+		}
+		
+		if(rS.size() == 0)
+			return null;
+		return rS;
+	}
+
 }

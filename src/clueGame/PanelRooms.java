@@ -8,6 +8,7 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
 public class PanelRooms extends JPanel {
+	private static final long serialVersionUID = 6631039874270748320L;
 	JCheckBox kitchenBox, livingRoomBox, observatoryBox, planetariumBox, highEnergyLaserLabBox,
 	saunaBox, dungeonBox, armouryBox, natatoriumBox;
 	
