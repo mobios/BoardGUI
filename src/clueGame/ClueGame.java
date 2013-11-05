@@ -48,10 +48,6 @@ public class ClueGame extends JFrame {
 	private JMenuBar menuBar;
 	private DetectiveNotes notes;
 	
-	private final int solutionNum = Card.CardType.size;
-	private static boolean boardLoad = false, playerLoad = false, cardLoad = false, deal = false, sol = false;		//Most definately need
-
-	
 /*	public ClueGame(String pConfig, String cConfig, String lConfig, String legCongic){
 		this();
 		this.playerConfig = pConfig;
@@ -77,6 +73,7 @@ public class ClueGame extends JFrame {
 		board = new Board();
 		boardLoad = true;
 		loadGameConfigFiles();
+		currentPlayer = players.get(playerTurnIndex);
 		deal();
 		selectAnswer();
 		
@@ -97,30 +94,6 @@ public class ClueGame extends JFrame {
 		add(BorderLayout.SOUTH, controlPanel);
 	}
 
-        public void setupControlPanel(){                                                                        
-                controlPanel = new ControlPanel();                                                              
-                controlPanel.associateButtonListener(new NextPlayerListener(), ControlPanel.specifyButton.NEXT);
-        }                                                                                                       
-        public class NextPlayerListener implements ActionListener{                                              
-                public void actionPerformed(ActionEvent e){                                                     
-                        if(!engine.isHuman())                                                                   
-                                return;                                                                         
-                                                                                                                
-                        engine.advanceHuman();                                                                  
-                }                                                                                               
-        }                                                                                                       	
-	public void nextPlayer() {		
-		advancePlayersTurns();
-		//Still need to update the game control panel to display whose turn it is
-		
-		rollDie();
-		board.calcTargets(currentPlayer.getRow(), currentPlayer.getColumn(), dieRoll);
-		board.repaint(); //repaints the board to show the highlighted targets
-		currentPlayer.makeMove(randGen, board);
-		board.repaint();
-		
-		board.removeHighlights();
-=======
 	public void setupControlPanel(){
 		controlPanel = new ControlPanel();
 		controlPanel.associateButtonListener(new NextPlayerListener(), ControlPanel.specifyButton.NEXT);
@@ -134,7 +107,7 @@ public class ClueGame extends JFrame {
 		}
 	}
 	public Player nextPlayer() {
-		advancePlayersTurns();
+		//advancePlayersTurns();
 			
 		//Still need to update the game control panel to display whose turn it is
 			
@@ -632,6 +605,7 @@ public class ClueGame extends JFrame {
 	
 	public void advancePlayersTurns(){
 		playerTurnIndex = ((playerTurnIndex+1) % players.size());
+		currentPlayer = players.get(playerTurnIndex);
 	}
 
 	public void setTurn(Player turn){
