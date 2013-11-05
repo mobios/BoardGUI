@@ -18,6 +18,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 
 public class ClueGame extends JFrame {
 	private static final long serialVersionUID = 1409857978233118403L;
@@ -526,7 +527,8 @@ public class ClueGame extends JFrame {
 		
 		ClueGame game = new ClueGame();
 		game.setVisible(true);
-		
+
+		JOptionPane.showMessageDialog(game, "$MSG_PLACEHOLDER", "$TITLE_PLACEHOLDER", JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	public int calcIndex(BoardCell position) {
