@@ -121,4 +121,12 @@ public class ControlPanel extends JPanel {
 	public void setAllowAccuse(boolean allow){
 		accuse.setEnabled(allow);
 	}
+	
+	public boolean getAllowAccuse(){
+		return accuse.isEnabled();
+	}
+	
+	public void setAllowSuggest(boolean suggest){
+		this.suggest.setEnabled(suggest);
+	}
 }

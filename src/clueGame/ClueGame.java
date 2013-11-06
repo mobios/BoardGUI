@@ -115,12 +115,8 @@ public class ClueGame extends JFrame {
 			
 		int roll = rollDie();
 		controlPanel.updateDieRoll(roll);
-		board.calcTargets(getPlayersTurn().getRow(), getPlayersTurn().getColumn(), roll);
-		
-		board.repaint(); //repaints the board to show the highlighted targets
-		
+		board.calcTargets(getPlayersTurn().getRow(), getPlayersTurn().getColumn(), roll);		
 		getPlayersTurn().doTurn(randGen, board);
-		board.repaint();
 		
 		return workingplayer;
 	}
@@ -668,9 +664,9 @@ public class ClueGame extends JFrame {
 				if(currentPlayer.getClass() == HumanPlayer.class){
 					duringHuman = true;
 					controlPanel.setAllowAccuse(true);
-					while(duringHuman){
+					while(duringHuman){								// Exists only to make sure notification is for the end of the humans turn
 						try {
-							wait();
+							wait();									// Fully event driven -- engine blocks until human ends turn
 						} catch (InterruptedException e) {}
 					}
 				}
@@ -714,9 +710,22 @@ public class ClueGame extends JFrame {
 			for (BoardCell cell : board.getTargets()) {
 				if (cell.containsClick(e.getX(), e.getY())) {
 					engine.move(cell);
-					break;
+					return;
 				}
 			}
+			
+			String[] badClick;
+			String[] badArea =  {"In a haze, you attempt to move your body, but some odd force prevents you.\nPerhaps the mouse you see"
+					+ " scurrying around isn't in an allowed area?", "Bad Click"};
+			
+			String[] badTurn =  {"In a haze, you attempt to move your body, but some odd force prevents you.\nPerhaps *somebody else*"
+					+ " is in control?", "It's not your turn!"};
+			
+			String[] badOrder = {"In a haze, you attempt to move your body, but some odd force prevents you.\nYou feel a strong sense"
+					+ " of deja vu.", "You have already moved."};
+			
+			badClick = engine.isHuman() ? (controlPanel.getAllowAccuse() ? badArea : badOrder) : badTurn;
+			JOptionPane.showMessageDialog(ClueGame.this, badClick[0], badClick[1], JOptionPane.INFORMATION_MESSAGE);
 		} 
 	}
 }
