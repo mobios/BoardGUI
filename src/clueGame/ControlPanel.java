@@ -18,7 +18,7 @@ public class ControlPanel extends JPanel {
 	private static final long serialVersionUID = 5883166420109755868L;
 	private CluedoTextField whoseTurn;
 	private JButton next, accuse, suggest;
-	private SomePanel die;
+	private CluedoAnonymousPanel die;
 
 	public ControlPanel() {
 		JFrame.setDefaultLookAndFeelDecorated(true);
@@ -28,7 +28,7 @@ public class ControlPanel extends JPanel {
 		
 		JFrame.setDefaultLookAndFeelDecorated(true);
 		//setLayout(new GridLayout(0,2));,
-		die = new SomePanel("Die", "Roll", 5);
+		die = new CluedoAnonymousPanel("Die", "Roll", 5);
 		add(BorderLayout.WEST,die);
 
 		whoseTurn = new CluedoPresentationField("Whose Turn?", 20);
@@ -70,11 +70,11 @@ public class ControlPanel extends JPanel {
 		
 	}
 	
-	private class SomePanel extends JPanel {
+	private class CluedoAnonymousPanel extends JPanel {
 		private static final long serialVersionUID = -9123393609257775724L;
 		private JTextField panelField;
 		
-		public SomePanel(String panelName, String labelName, int fieldLength) {
+		public CluedoAnonymousPanel(String panelName, String labelName, int fieldLength) {
 			JLabel label = new JLabel(labelName);
 			panelField = new JTextField(fieldLength);
 			panelField.setFont(new Font("SansSerif", Font.BOLD, 12));
@@ -108,5 +108,9 @@ public class ControlPanel extends JPanel {
 		NEXT,
 		ACCUSE,
 		SUGGEST;
+	}
+	
+	public void setAllowAccuse(boolean allow){
+		accuse.setEnabled(allow);
 	}
 }

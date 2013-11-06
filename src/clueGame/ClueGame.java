@@ -656,6 +656,7 @@ public class ClueGame extends JFrame {
 			while(true){
 				Player person = nextPlayer();
 				controlPanel.setPlayerTurnDisplay(person.getName());
+				person.doTurn(randGen, board);
 				if(person.getClass() == HumanPlayer.class){
 					duringHuman = true;
 					while(duringHuman){
