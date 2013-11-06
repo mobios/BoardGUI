@@ -1,4 +1,4 @@
-Colonel Mustard,1.24,0.95,0.51,6,23
+Colonel Mustard Greens,1.24,0.95,0.51,6,23
 Miss. Purple,2.77,0.92,0.51,10,0
 Dirty Harry,0.10,0.80,0.45,0,6
 Kirk Lazarus,0.00,1.00,1.00,0,14

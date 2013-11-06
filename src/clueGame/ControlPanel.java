@@ -37,7 +37,7 @@ public class ControlPanel extends JPanel {
 
 		suggest = new JButton("Make a suggestion");
 		accuse = new JButton("Make an Accusation");
-		next = new JButton("Next Player");
+		next = new JButton("End Turn");
 
 		add(BorderLayout.EAST,suggest);
 		add(BorderLayout.EAST,accuse);
@@ -83,10 +83,18 @@ public class ControlPanel extends JPanel {
 			add(label);
 			add(panelField);
 		}
+		
+		public <T> void updateValue(T value){
+			panelField.setText(value.toString());
+		}
 	}
 	
-	public void setPlayerTurnDisplay(String whoTurn){
+	public void updatePlayerTurnDisplay(String whoTurn){
 		whoseTurn.field.setText(whoTurn);
+	}
+	
+	public void updateDieRoll(int roll){
+		die.updateValue(roll);
 	}
 	
 	public void associateButtonListener(ActionListener handler, specifyButton whichButton){

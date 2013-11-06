@@ -25,17 +25,13 @@ public class HumanPlayer extends Player {
 		return null;
 	}
 
-	@Override
-	public void makeMove(Random randGen, Board board) {
-		setPosition(board.getSelectedCell());
+	public void makeMove(BoardCell whereTo) {
+		setPosition(whereTo);
 	}
 
 	@Override
 	public void doTurn(Random randGen, Board board) {
-		while (!board.getTargets().contains(board.getSelectedCell())) { continue; }
-		makeMove(randGen, board);
-		
-		//moar stuff to come
+		return;
 	}
 	
 }

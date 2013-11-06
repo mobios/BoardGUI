@@ -1,7 +1,6 @@
 package clueGame;
 
 import java.awt.Graphics;
-import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -19,7 +18,7 @@ import java.util.TreeMap;
 import javax.swing.JPanel;
 
 
-public class Board extends JPanel implements MouseListener {
+public class Board extends JPanel{
 	private static final long serialVersionUID = 8728427497602838343L;
 	private ArrayList<BoardCell> cellsList;
 	private Map<Integer, LinkedList<Integer>> adjMtx;
@@ -63,12 +62,14 @@ public class Board extends JPanel implements MouseListener {
 		
 		loadConfigFiles();
 		calcAdjacencies();
-		
-		addMouseListener(this);
 	}
 	
 	public void setGame(ClueGame g) {
 		game = g;
+	}
+	
+	public void associateMouseListener(MouseListener listener){
+		addMouseListener(listener);
 	}
 	
 	public void paintComponent(Graphics g){ // used to draw the board
@@ -366,26 +367,6 @@ public class Board extends JPanel implements MouseListener {
 		}
 		visited[cell] = false;
 	}
-	
-	public void mouseClicked(MouseEvent e) {}
-	public void mouseEntered(MouseEvent e) {}
-	public void mouseExited(MouseEvent e) {}
-	public void mouseReleased(MouseEvent e) {}
-	
-	public void mousePressed(MouseEvent e)  {
-		for (BoardCell cell : targets) {
-			if (cell.containsClick(e.getX(), e.getY())) {
-				selectedCell = cell;
-				break;
-			}
-		}
-		
-		/*
-		if (!targets.contains(selectedCell)) {
-			System.out.println("Incompatible cell chosen");
-		}
-		*/
-	}  
 
 	public RoomCell getRoomCellAt( int row, int col){
 		if(cellsList.get(calcIndex(row, col)).isRoom())

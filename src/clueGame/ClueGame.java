@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -31,7 +33,6 @@ public class ClueGame extends JFrame {
 	private List<Card> solution;
 	private List<Player> players;
 	private int playerTurnIndex;
-	private int dieRoll;
 	
 	private String playerConfig, CardsConfig;
 	private final int solutionNum = Card.CardType.size;
@@ -64,7 +65,6 @@ public class ClueGame extends JFrame {
 		players = new ArrayList<Player>();
 		randGen = new Random(0);
 		playerTurnIndex = -1;
-		dieRoll = 0;
 		
 		playerConfig = "players.txt";
 		CardsConfig = "cards.txt";
@@ -90,6 +90,7 @@ public class ClueGame extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		add(board);
 		add(BorderLayout.SOUTH, controlPanel);
+		board.associateMouseListener(new mouseOnBoardListener());
 	}
 
 	public void setupControlPanel(){
@@ -104,20 +105,24 @@ public class ClueGame extends JFrame {
 			engine.advanceHuman();
 		}
 	}
-	public Player nextPlayer() {
+	public Player nextPlayer(){
 		advancePlayersTurns();
+		
+		Player workingplayer = getPlayersTurn();
+		controlPanel.updatePlayerTurnDisplay(workingplayer.getName());
 			
 		//Still need to update the game control panel to display whose turn it is
 			
-		rollDie();
-		board.calcTargets(getPlayersTurn().getRow(), getPlayersTurn().getColumn(), dieRoll);
+		int roll = rollDie();
+		controlPanel.updateDieRoll(roll);
+		board.calcTargets(getPlayersTurn().getRow(), getPlayersTurn().getColumn(), roll);
+		
 		board.repaint(); //repaints the board to show the highlighted targets
 		
 		getPlayersTurn().doTurn(randGen, board);
-		board.clearTargets();
 		board.repaint();
 		
-		return getPlayersTurn();
+		return workingplayer;
 	}
 
 	private JMenu createFileMenu() { // to create a MenuBar Menu named file
@@ -541,7 +546,7 @@ public class ClueGame extends JFrame {
 				" OF TYPE " + given.getClass() + "\n\nThis does not meet any of the possible parameters:" + parameters);
 	}
 	
-	public static <T> T getRandFromCollection(Random rand, List<T> list){
+	public static <T> T getRandFromList(Random rand, List<T> list){
 		return list.get(rand.nextInt(list.size()));
 	}
 
@@ -560,11 +565,7 @@ public class ClueGame extends JFrame {
 	public static void main(String[] args){
 		ClueGame game = new ClueGame();
 		game.setVisible(true);
-		while(true) {
-			game.nextPlayer();
-		}
-		
-		/*
+
 		startupMessages(game);
 		game.engine = game.new gameEngine();
 		game.engineThread = new Thread(game.engine);
@@ -574,12 +575,12 @@ public class ClueGame extends JFrame {
 			start = System.nanoTime();
 			game.repaint();
 			elapsed = System.nanoTime() - start;
-			if(16 < elapsed/1000000)
+			if(16 > elapsed/1000000)
 				try {
-					Thread.sleep(16 - elapsed);
+					Thread.sleep(16 - elapsed/1000000);
 				} catch (InterruptedException e) {}
 		}
-		*/
+		
 	}
 	
 	public static void startupMessages(ClueGame game){
@@ -651,20 +652,22 @@ public class ClueGame extends JFrame {
 		return null;
 	}
 	
-	public void rollDie(){
-		dieRoll = randGen.nextInt(6) + 1;
+	public int rollDie(){
+		return randGen.nextInt(6) + 1;
 	}
 
 	private class gameEngine implements Runnable{
 		private boolean duringHuman;
+		private Player currentPlayer;
 		
 		public synchronized void run(){
 			while(true){
-				Player person = nextPlayer();
-				controlPanel.setPlayerTurnDisplay(person.getName());
-				person.doTurn(randGen, board);
-				if(person.getClass() == HumanPlayer.class){
+				board.clearTargets();
+				currentPlayer = nextPlayer();
+				controlPanel.updatePlayerTurnDisplay(currentPlayer.getName());
+				if(currentPlayer.getClass() == HumanPlayer.class){
 					duringHuman = true;
+					controlPanel.setAllowAccuse(true);
 					while(duringHuman){
 						try {
 							wait();
@@ -674,7 +677,7 @@ public class ClueGame extends JFrame {
 				
 				else{
 					try {
-						Thread.sleep(1);
+						Thread.sleep(1000);
 					} catch (InterruptedException e) {}
 				}
 			}
@@ -688,5 +691,32 @@ public class ClueGame extends JFrame {
 			duringHuman = false;
 			notifyAll();
 		}
+		
+		public void move(BoardCell whereTo){
+			if(currentPlayer == null)
+				return;
+			
+			if(duringHuman){
+				((HumanPlayer)currentPlayer).makeMove(whereTo);
+				board.clearTargets();
+				controlPanel.setAllowAccuse(false);
+			}
+		}
+	}
+	
+	private class mouseOnBoardListener implements MouseListener{
+		public void mouseClicked(MouseEvent e) {}
+		public void mouseEntered(MouseEvent e) {}
+		public void mouseExited(MouseEvent e) {}
+		public void mouseReleased(MouseEvent e) {}
+		
+		public void mousePressed(MouseEvent e)  {
+			for (BoardCell cell : board.getTargets()) {
+				if (cell.containsClick(e.getX(), e.getY())) {
+					engine.move(cell);
+					break;
+				}
+			}
+		} 
 	}
 }

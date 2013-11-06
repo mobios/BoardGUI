@@ -2,11 +2,13 @@ package clueGame;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
 public class ComputerPlayer extends Player {
 	private BoardCell hPrevCell;					// I have a masochistic love for the WinAPI
+	private RoomCell hPrevRoom;
 	
 	public ComputerPlayer(String name, ArrayList<Card> myCards, Color color, BoardCell location) {
 		this();
@@ -21,19 +23,17 @@ public class ComputerPlayer extends Player {
 	@Override
 	public Player set(String name, ArrayList<Card> myCards, Color myColor, BoardCell myPosition){
 		return super.set(name, myCards, myColor, myPosition);
-		
 	}
 	
 	public BoardCell pickLocation(Random rgen, Set<BoardCell> targets){ // needs method body
-		ArrayList<BoardCell> t = new ArrayList<BoardCell>(targets);
-		t.remove(hPrevCell);
-		ArrayList<BoardCell> posDoor = BoardCell.sieveDoor(t);
-			
+		ArrayList<BoardCell> workingList = new ArrayList<BoardCell>(targets);
+		workingList.remove(hPrevCell);
+		List<BoardCell> t = sprc(workingList);
+		List<BoardCell> posDoor = BoardCell.sieveDoor(t);
+		
 		BoardCell rnd = ((posDoor.size() > 0) ? posDoor.get(rgen.nextInt(posDoor.size())) : t.get(rgen.nextInt(t.size())));
 		hPrevCell = rnd;
-		if (rnd != null) {
-			turnFinished = true;
-		}
+		
 		return rnd;
 	}
 
@@ -67,24 +67,46 @@ public class ComputerPlayer extends Player {
 		
 		ArrayList<Card> personCards = sieveKnownCards(ClueGame.getAllPeopleCards());
 		ArrayList<Card> weaponCards = sieveKnownCards(ClueGame.getAllWeaponCards());
-		ret.add(ClueGame.getRandFromCollection(rand, personCards));
-		ret.add(ClueGame.getRandFromCollection(rand, weaponCards));
+		ret.add(ClueGame.getRandFromList(rand, personCards));
+		ret.add(ClueGame.getRandFromList(rand, weaponCards));
 		
 		return ret;
 	}	
 	
-	@Override
+
 	public void makeMove(Random randGen, Board board) {
-		hPrevCell = pickLocation(randGen, board.getTargets());
-		setPosition(hPrevCell);
+		BoardCell oldCell = getPosition();
+		BoardCell newCell = pickLocation(randGen, board.getTargets());
+		setPosition(newCell);
+		hPrevCell = oldCell;
+		if(newCell.getClass() == RoomCell.class)
+			hPrevRoom = (RoomCell)newCell;
 		
 		//Needs to repaint the board
 	}
 
 	@Override
 	public void doTurn(Random randGen, Board board) {
+		try {
+			Thread.sleep(850);
+		} catch (InterruptedException e) {}
 		makeMove(randGen, board);
 		
 		
+	}
+	
+	public List<BoardCell> sprc(List<BoardCell> source){
+		if(hPrevRoom == null)
+			return source;
+					
+		List<BoardCell> retlist = new ArrayList<BoardCell>();
+		for(BoardCell cell : source){
+			if(cell.getClass() != RoomCell.class)
+				retlist.add(cell);
+			else if(((RoomCell)cell).getRoomInitial() != hPrevRoom.getRoomInitial())
+				retlist.add(cell);
+		}
+		
+		return retlist;
 	}
 }

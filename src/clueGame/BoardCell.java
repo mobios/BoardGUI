@@ -4,6 +4,7 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.List;
 
 public abstract class BoardCell {
 	private int row, column, width, height, scale;
@@ -70,10 +71,10 @@ public abstract class BoardCell {
 		return true;
 	}
 	
-	public static ArrayList<BoardCell> sieveDoor(ArrayList<BoardCell> arr){
-		ArrayList<BoardCell> ret = new ArrayList<BoardCell>();
+	public static List<BoardCell> sieveDoor(List<BoardCell> t){
+		List<BoardCell> ret = new ArrayList<BoardCell>();
 		
-		for(BoardCell cell : arr)
+		for(BoardCell cell : t)
 			if(cell.isDoorway())
 				ret.add(cell);
 		

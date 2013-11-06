@@ -135,12 +135,11 @@ public abstract class Player {
 		ArrayList<Card> paramCopy = new ArrayList<Card>(params);
 		params.removeAll(myCards);
 		paramCopy.removeAll(params);
-		return ((paramCopy.size() > 0 ) ? ClueGame.getRandFromCollection(rand, paramCopy) : null);
+		return ((paramCopy.size() > 0 ) ? ClueGame.getRandFromList(rand, paramCopy) : null);
 	}
 	
 	public abstract ArrayList<Card> accuse(Random rand);
 	
-	public abstract void makeMove(Random randGen, Board board);
 	public abstract void doTurn(Random randGen, Board board);
 	
 	
