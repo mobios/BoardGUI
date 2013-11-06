@@ -25,9 +25,7 @@ public class ControlPanel extends JPanel {
 
 		//setLayout(new GridLayout(0,2));
 		setSize(new Dimension(200, 300));
-		
-		JFrame.setDefaultLookAndFeelDecorated(true);
-		//setLayout(new GridLayout(0,2));,
+
 		die = new CluedoAnonymousPanel("Die", "Roll", 5);
 		add(BorderLayout.WEST,die);
 

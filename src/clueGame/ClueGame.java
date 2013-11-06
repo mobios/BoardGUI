@@ -115,7 +115,8 @@ public class ClueGame extends JFrame {
 			
 		int roll = rollDie();
 		controlPanel.updateDieRoll(roll);
-		board.calcTargets(getPlayersTurn().getRow(), getPlayersTurn().getColumn(), roll);		
+		board.setPcc(workingplayer.getPosition());
+		board.calcTargets(getPlayersTurn().getRow(), getPlayersTurn().getColumn(), roll);	
 		getPlayersTurn().doTurn(randGen, board);
 		
 		return workingplayer;
@@ -659,6 +660,7 @@ public class ClueGame extends JFrame {
 		public synchronized void run(){
 			while(true){
 				board.clearTargets();
+				board.clearPcc();
 				currentPlayer = nextPlayer();
 				controlPanel.updatePlayerTurnDisplay(currentPlayer.getName());
 				if(currentPlayer.getClass() == HumanPlayer.class){
@@ -695,6 +697,7 @@ public class ClueGame extends JFrame {
 			if(duringHuman){
 				((HumanPlayer)currentPlayer).makeMove(whereTo);
 				board.clearTargets();
+				board.clearPcc();
 				controlPanel.setAllowAccuse(false);
 			}
 		}

@@ -28,7 +28,7 @@ public class Board extends JPanel{
 	private int numRows, numColumns;
 	ClueGame game;
 	private String legendFile, layoutFile;
-	private BoardCell selectedCell;
+	private BoardCell pcc;
 	
 	public String getLegendFile() {
 		return legendFile;
@@ -52,7 +52,6 @@ public class Board extends JPanel{
 		rooms = new TreeMap<Character,String>();
 		cellsList = new ArrayList<BoardCell>();
 		targets = new HashSet<BoardCell>();
-		selectedCell = new Walkway(-1,-1);
 		
 		if(legendFile == null || legendFile.isEmpty())
 			legendFile = "legend.txt";
@@ -411,11 +410,16 @@ public class Board extends JPanel{
 		targets.clear();
 	}
 
-	public BoardCell getSelectedCell() {
-		return selectedCell;
+	public BoardCell getPcc() {
+		return pcc;
 	}
 
-	public void setSelectedCell(BoardCell selectedCell) {
-		this.selectedCell = selectedCell;
+	public void clearPcc() {
+		setPcc(null);
 	}
+	
+	public void setPcc(BoardCell pcc) {
+		this.pcc = pcc;
+	}
+
 }
