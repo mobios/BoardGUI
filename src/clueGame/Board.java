@@ -55,7 +55,7 @@ public class Board extends JPanel implements MouseListener {
 		rooms = new TreeMap<Character,String>();
 		cellsList = new ArrayList<BoardCell>();
 		targets = new HashSet<BoardCell>();
-		selectedCell = null;
+		selectedCell = new Walkway(-1,-1);
 		
 		if(legendFile == null || legendFile.isEmpty())
 			legendFile = "legend.txt";
@@ -69,21 +69,22 @@ public class Board extends JPanel implements MouseListener {
 		addMouseListener(this);
 	}
 	
+	public void setGame(ClueGame g) {
+		game = g;
+	}
+	
 	public void paintComponent(Graphics g){ // used to draw the board
+		super.paintComponent(g);
 		
-		game = new ClueGame();
-		ArrayList<Player> players = game.getPlayers();
-		
-		for (BoardCell cell: cellsList){
+		for (BoardCell cell : cellsList){
 			if (targets.contains(cell)) {
 				cell.setHighlighted(true);
 			}
 			cell.draw(g, this);
 		}
-		for (Player p: players){
+		for (Player p: game.getPlayers()){
 			p.drawPlayers(g);
-		}
-		
+		}	
 	}
 	
 	public void loadRoomConfig() throws BadConfigFormatException{
@@ -374,16 +375,18 @@ public class Board extends JPanel implements MouseListener {
 	public void mouseReleased(MouseEvent e) {}
 	
 	public void mousePressed(MouseEvent e)  {
-		setSelectedCell(null);
 		for (BoardCell cell : targets) {
 			if (cell.containsClick(e.getX(), e.getY())) {
-				setSelectedCell(cell);
+				selectedCell = cell;
 				break;
 			}
 		}
 		
-		if (getSelectedCell() == null)
-			System.out.println("Incompatible cell chosen.");
+		/*
+		if (!targets.contains(selectedCell)) {
+			System.out.println("Incompatible cell chosen");
+		}
+		*/
 	}  
 
 	public RoomCell getRoomCellAt( int row, int col){
@@ -422,10 +425,11 @@ public class Board extends JPanel implements MouseListener {
 		return numColumns;
 	}
 	
-	public void removeHighlights() {
-		for (BoardCell cell : cellsList) {
+	public void clearTargets() {
+		for(BoardCell cell : targets) {
 			cell.setHighlighted(false);
 		}
+		targets.clear();
 	}
 
 	public BoardCell getSelectedCell() {
