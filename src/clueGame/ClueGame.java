@@ -63,12 +63,13 @@ public class ClueGame extends JFrame {
 		solution = new ArrayList<Card>();
 		players = new ArrayList<Player>();
 		randGen = new Random(0);
-		playerTurnIndex = 0;
+		playerTurnIndex = -1;
 		dieRoll = 0;
 		
 		playerConfig = "players.txt";
 		CardsConfig = "cards.txt";
 		board = new Board();
+		board.setGame(this);
 		boardLoad = true;
 		loadGameConfigFiles();
 		deal();
@@ -104,16 +105,16 @@ public class ClueGame extends JFrame {
 		}
 	}
 	public Player nextPlayer() {
-		//advancePlayersTurns();
+		advancePlayersTurns();
 			
 		//Still need to update the game control panel to display whose turn it is
 			
 		rollDie();
 		board.calcTargets(getPlayersTurn().getRow(), getPlayersTurn().getColumn(), dieRoll);
 		board.repaint(); //repaints the board to show the highlighted targets
-			
+		
 		getPlayersTurn().doTurn(randGen, board);
-		board.removeHighlights();
+		board.clearTargets();
 		board.repaint();
 		
 		return getPlayersTurn();
@@ -559,7 +560,11 @@ public class ClueGame extends JFrame {
 	public static void main(String[] args){
 		ClueGame game = new ClueGame();
 		game.setVisible(true);
-
+		while(true) {
+			game.nextPlayer();
+		}
+		
+		/*
 		startupMessages(game);
 		game.engine = game.new gameEngine();
 		game.engineThread = new Thread(game.engine);
@@ -574,6 +579,7 @@ public class ClueGame extends JFrame {
 					Thread.sleep(16 - elapsed);
 				} catch (InterruptedException e) {}
 		}
+		*/
 	}
 	
 	public static void startupMessages(ClueGame game){

@@ -28,13 +28,14 @@ public class HumanPlayer extends Player {
 	@Override
 	public void makeMove(Random randGen, Board board) {
 		setPosition(board.getSelectedCell());
-		System.out.println("Row: " + board.getSelectedCell().getRow() +
-				", column: " + board.getSelectedCell().getColumn());
 	}
 
 	@Override
 	public void doTurn(Random randGen, Board board) {
-		// TODO Auto-generated method stub
+		while (!board.getTargets().contains(board.getSelectedCell())) { continue; }
+		makeMove(randGen, board);
 		
+		//moar stuff to come
 	}
+	
 }
