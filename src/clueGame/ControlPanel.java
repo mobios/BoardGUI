@@ -1,21 +1,13 @@
-/*
- * NAMES: David Grisham and Leah Moldauer
- * Control Panel GUI for Clue Game
- */
 package clueGame;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
-import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EtchedBorder;
@@ -55,6 +47,7 @@ public class ControlPanel extends JPanel {
 	}
 	
 	private class CluedoTextField extends JPanel {
+		private static final long serialVersionUID = -822398577719509729L;
 		protected JTextField field;
 		
 		public CluedoTextField(String labelName, int textLength) {
@@ -67,6 +60,7 @@ public class ControlPanel extends JPanel {
 	}
 	
 	private class CluedoPresentationField extends CluedoTextField{
+		private static final long serialVersionUID = 1879744014608648695L;
 
 		public CluedoPresentationField(String labelName, int textLength) {
 			super(labelName, textLength);
@@ -77,6 +71,7 @@ public class ControlPanel extends JPanel {
 	}
 	
 	private class SomePanel extends JPanel {
+		private static final long serialVersionUID = -9123393609257775724L;
 		private JTextField panelField;
 		
 		public SomePanel(String panelName, String labelName, int fieldLength) {
