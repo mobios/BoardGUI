@@ -1,7 +1,3 @@
-/*
- * NAMES: David Grisham and Leah Moldauer
- * Control Panel GUI for Clue Game
- */
 package clueGame;
 
 import java.awt.BorderLayout;
