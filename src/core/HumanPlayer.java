@@ -14,6 +14,10 @@ public class HumanPlayer extends Player {
 		super();
 	}
 	
+	public HumanPlayer(Player p) {
+		super(p);
+	}
+	
 	@Override
 	public ArrayList<Card> accuse(Random unused){
 		return null;
