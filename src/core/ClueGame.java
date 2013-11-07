@@ -578,6 +578,7 @@ public class ClueGame extends JFrame {
 		game.engine = game.new gameEngine();
 		game.engineThread = new Thread(game.engine);
 		game.engineThread.start();
+		
 		long start, elapsed;
 		while(true){
 			start = System.nanoTime();
@@ -669,6 +670,9 @@ public class ClueGame extends JFrame {
 		private boolean duringHuman;
 		private Player currentPlayer;
 		
+		public gameEngine(){
+		}
+		
 		public synchronized void run(){
 			while(true){
 				board.clearTargets();
@@ -727,6 +731,8 @@ public class ClueGame extends JFrame {
 					engine.move(cell);
 					return;
 				}
+				if(getPlayersTurn().getPosition().equals(cell) && getPlayersTurn().getClass() == HumanPlayer.class)
+					return;
 			}
 			
 			String[] badClick;
