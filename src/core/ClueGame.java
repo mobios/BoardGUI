@@ -1,4 +1,4 @@
-package clueGame;
+package core;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -38,7 +38,7 @@ public class ClueGame extends JFrame {
 	private final int solutionNum = Card.CardType.size;
 	private Board board;
 	private ControlPanel controlPanel;
-	private clueGame.PanelInfo humanInfo;
+	private guiPanels.PanelInfo humanInfo;
 	private static boolean boardLoad = false, playerLoad = false, cardLoad = false, deal = false, sol = false;//Most definately need
 	private Random randGen;//to refactor state checking
 	
@@ -80,7 +80,7 @@ public class ClueGame extends JFrame {
 		notes = new DetectiveNotes();
 		
 		setTitle("Clue Game");
-		setSize(1300, 860);
+		setSize(1200, 860);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setJMenuBar(menuBar);
 		setBackground(Color.gray);
@@ -93,12 +93,15 @@ public class ClueGame extends JFrame {
 		add(BorderLayout.SOUTH, controlPanel);
 		board.associateMouseListener(new mouseOnBoardListener());
 		
-		humanInfo = new clueGame.PanelInfo();
+		humanInfo = new guiPanels.PanelInfo();
 		for(Player possibleHuman : players)
 			if(possibleHuman.getClass() == HumanPlayer.class)
 				((HumanPlayer)possibleHuman).divulgeCards(humanInfo);
 		
 		add(BorderLayout.EAST, humanInfo);
+
+		setVisible(true);
+		startupMessages();
 	}
 
 	public void setupControlPanel(){
@@ -114,6 +117,7 @@ public class ClueGame extends JFrame {
 			engine.advanceHuman();
 		}
 	}
+
 	public Player nextPlayer(){
 		advancePlayersTurns();
 		
@@ -570,9 +574,7 @@ public class ClueGame extends JFrame {
 
 	public static void main(String[] args){
 		ClueGame game = new ClueGame();
-		game.setVisible(true);
-
-		startupMessages(game);
+		
 		game.engine = game.new gameEngine();
 		game.engineThread = new Thread(game.engine);
 		game.engineThread.start();
@@ -590,15 +592,15 @@ public class ClueGame extends JFrame {
 		
 	}
 	
-	public static void startupMessages(ClueGame game){
-		JOptionPane.showMessageDialog(game, "You are the degenerate " + game.getHuman().getName() + ".\nThings seem off, because you can only recall"
-						+ " colors in RGB format; you have completely forgotten their associated names!\nYou are obsessed with the color " + Integer.toHexString(game.getHuman().getColor().getRGB()),
+	public void startupMessages(){
+		JOptionPane.showMessageDialog(this, "You are the degenerate " + this.getHuman().getName() + ".\nThings seem off, because you can only recall"
+						+ " colors in RGB format; you have completely forgotten their associated names!\nYou are obsessed with the color #" + Integer.toHexString(this.getHuman().getColor().getRGB()).substring(2),
 						"Je vous presente Cluedo!", JOptionPane.INFORMATION_MESSAGE);
 		
-		JOptionPane.showMessageDialog(game, "You are calling on your second favorite professor, Dr. Black, who is an eccentric, affluent recluse with a penchant for collecting abnormal weapons."
+		JOptionPane.showMessageDialog(this, "You are calling on your second favorite professor, Dr. Black, who is an eccentric, affluent recluse with a penchant for collecting abnormal weapons."
 				+ "\nYour common sense begins to tingle, and you realize Dr. Black has been murdered!\nYou rush for the exit, but find none, as the house has only entrances.", "Ou es-tu?", JOptionPane.INFORMATION_MESSAGE);
 	
-		JOptionPane.showMessageDialog(game, "Things are not looking well, gonze.\n\nThe late Dr. Black's remnants blend nicely with the thick layer of dust coating the house -- you must"
+		JOptionPane.showMessageDialog(this, "Things are not looking well, gonze.\n\nThe late Dr. Black's remnants blend nicely with the thick layer of dust coating the house -- you must"
 				+ " deduce the room he was murdered in to give his family closure.\nThe murder weapon will fetch quite a price on the Angolian Black Market. It will also allow you to break out of the Ch�teau.\n"
 				+ "The murderer will also need to meet with an 'unfortunate accident' for killing your second favorite professor.\n\nBonne chance!", "Que ferez-vous?", JOptionPane.INFORMATION_MESSAGE);
 		

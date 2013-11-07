@@ -1,4 +1,11 @@
-package clueGame;
+package core;
+
+import guiPanels.PanelPeople;
+import guiPanels.PanelPersonGuess;
+import guiPanels.PanelRoomGuess;
+import guiPanels.PanelRooms;
+import guiPanels.PanelWeaponGuess;
+import guiPanels.PanelWeapons;
 
 import java.awt.GridLayout;
 

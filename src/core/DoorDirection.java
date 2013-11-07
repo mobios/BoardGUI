@@ -1,4 +1,4 @@
-package clueGame;
+package core;
 
 public enum DoorDirection {
 	UP,

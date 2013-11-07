@@ -1,4 +1,4 @@
-package clueGame;
+package core;
 
 import java.awt.Color;
 import java.awt.Graphics;

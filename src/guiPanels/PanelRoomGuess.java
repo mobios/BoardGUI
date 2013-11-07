@@ -1,4 +1,4 @@
-package clueGame;
+package guiPanels;
 
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
@@ -9,7 +9,7 @@ public class PanelRoomGuess extends JPanel{
 	private static final long serialVersionUID = 8744913873013883248L;
 	private JComboBox<String> roomGuessCombo;
 	
-	PanelRoomGuess(){
+	public PanelRoomGuess(){
 		
 		roomGuessCombo = createRoomCombo();
 		

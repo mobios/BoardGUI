@@ -1,4 +1,4 @@
-package clueGame;
+package core;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -34,7 +34,7 @@ public class HumanPlayer extends Player {
 		return;
 	}
 	
-	public void divulgeCards(clueGame.PanelInfo argPanel){
+	public void divulgeCards(guiPanels.PanelInfo argPanel){
 		for(Card card : myCards)
 			argPanel.add(card.getType().name(), card.getName());
 	}

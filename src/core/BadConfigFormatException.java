@@ -1,4 +1,4 @@
-package clueGame;
+package core;
 
 public class BadConfigFormatException extends Exception { // Exception because we don't know what kind of file the user
 														  /**

@@ -1,4 +1,4 @@
-package clueGame;
+package core;
 
 import java.awt.Graphics;
 import java.awt.event.MouseListener;
@@ -26,9 +26,9 @@ public class Board extends JPanel{
 	private Set<BoardCell> targets;
 	private boolean[] visited;
 	private int numRows, numColumns;
-	ClueGame game;
 	private String legendFile, layoutFile;
 	private BoardCell pcc;
+	private ClueGame clueGamePtr;
 	
 	public String getLegendFile() {
 		return legendFile;
@@ -64,7 +64,7 @@ public class Board extends JPanel{
 	}
 	
 	public void setGame(ClueGame g) {
-		game = g;
+		clueGamePtr = g;
 	}
 	
 	public void associateMouseListener(MouseListener listener){
@@ -80,7 +80,7 @@ public class Board extends JPanel{
 			}
 			cell.draw(g, this);
 		}
-		for (Player p: game.getPlayers()){
+		for (Player p: clueGamePtr.getPlayers()){
 			p.drawPlayers(g);
 		}	
 	}

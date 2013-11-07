@@ -1,11 +1,12 @@
-package clueGame;
+package core;
 
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import clueGame.Card.CardType;
+
+import core.Card.CardType;
 
 public abstract class Player {
 	private String name;
