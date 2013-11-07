@@ -28,7 +28,7 @@ public class ComputerPlayer extends Player {
 	public BoardCell pickLocation(Random rgen, Set<BoardCell> targets){ // needs method body
 		ArrayList<BoardCell> workingList = new ArrayList<BoardCell>(targets);
 		workingList.remove(hPrevCell);
-		List<BoardCell> t = sprc(workingList);
+		List<BoardCell> t = sievePreviousRoomCards(workingList);
 		List<BoardCell> posDoor = BoardCell.sieveDoor(t);
 		
 		BoardCell rnd = ((posDoor.size() > 0) ? posDoor.get(rgen.nextInt(posDoor.size())) : t.get(rgen.nextInt(t.size())));
@@ -39,7 +39,7 @@ public class ComputerPlayer extends Player {
 
 	@Override
 	public ArrayList<Card> accuse(Random rgen) { // Only public to make junit tests... should be private for release
-										// Does not make use of sieveKnownCards function YET
+												// Does not make use of sieveKnownCards function YET
 		ArrayList<Card> workingSet = new ArrayList<Card>(ClueGame.getAllCards());
 		workingSet.remove(myCards);
 		workingSet.remove(knownCards);
@@ -95,7 +95,7 @@ public class ComputerPlayer extends Player {
 		
 	}
 	
-	public List<BoardCell> sprc(List<BoardCell> source){
+	public List<BoardCell> sievePreviousRoomCards(List<BoardCell> source){
 		if(hPrevRoom == null)
 			return source;
 					
