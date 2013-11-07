@@ -81,8 +81,6 @@ public abstract class BoardCell {
 		return ret;
 	}
 
-
-
 	public int getWidth() {
 		return width;
 	}
