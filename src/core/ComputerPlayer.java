@@ -8,7 +8,8 @@ import java.util.Set;
 
 public class ComputerPlayer extends Player {
 	private BoardCell hPrevCell;					// I have a masochistic love for the WinAPI
-	private RoomCell hPrevRoom;
+	private List<RoomCell> visited;
+	private RoomCell targetRoom;
 	
 	public ComputerPlayer(String name, ArrayList<Card> myCards, Color color, BoardCell location) {
 		this();
@@ -18,6 +19,7 @@ public class ComputerPlayer extends Player {
 	public ComputerPlayer() {
 		super();
 		hPrevCell = (BoardCell) new Walkway(0,0);				// should be default action, but let's just make sure
+		visited = new ArrayList<RoomCell>();
 	};
 	
 	@Override
@@ -80,7 +82,7 @@ public class ComputerPlayer extends Player {
 		setPosition(newCell);
 		hPrevCell = oldCell;
 		if(newCell.getClass() == RoomCell.class)
-			hPrevRoom = (RoomCell)newCell;
+			visited.add((RoomCell) newCell);
 		
 		//Needs to repaint the board
 	}
@@ -96,17 +98,19 @@ public class ComputerPlayer extends Player {
 	}
 	
 	public List<BoardCell> sievePreviousRoomCards(List<BoardCell> source){
-		if(hPrevRoom == null)
-			return source;
-					
 		List<BoardCell> retlist = new ArrayList<BoardCell>();
 		for(BoardCell cell : source){
 			if(cell.getClass() != RoomCell.class)
 				retlist.add(cell);
-			else if(((RoomCell)cell).getRoomInitial() != hPrevRoom.getRoomInitial())
+			else if(!visited.contains(((RoomCell)cell).getRoomInitial()))
 				retlist.add(cell);
 		}
 		
 		return retlist;
+	}
+	
+	public RoomCell pickTarget(List<BoardCell> possibilities){
+		int[][] distances = new int[possibilities.size()][2];
+		
 	}
 }
