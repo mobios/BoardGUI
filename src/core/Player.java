@@ -28,6 +28,15 @@ public abstract class Player {
 		myCards = new ArrayList<Card>();
 	};
 	
+	public Player(Player p) {
+		if (this == p) {
+			return;
+		}
+		
+		this.knownCards = p.knownCards;
+		this.myCards = p.myCards;
+	}
+	
 	public Player set(String name, ArrayList<Card> myCards, Color myColor, BoardCell myPosition){
 		this.name = name;
 		this.myCards = myCards;
