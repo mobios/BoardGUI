@@ -280,7 +280,9 @@ public class ClueGame extends JFrame {
 						+ " a walkway in the layout configuration file at: " + board.getLayoutFile() + "\nThe cell at that location is: " + board.getCellAt(calcIndex(row, column)).getClass());
 			}
 			
-			players.add(((ln == 0) ? new HumanPlayer() : new ComputerPlayer()).set(args[0].trim(), null, Color.getHSBColor(hue, saturation, lum), board.getCellAt(calcIndex(row, column))));
+			//players.add(((ln == 0) ? new HumanPlayer() : new ComputerPlayer()).set(args[0].trim(), null, Color.getHSBColor(hue, saturation, lum), board.getCellAt(calcIndex(row, column))));
+			players.add(new ComputerPlayer().set(args[0].trim(), 
+					null, Color.getHSBColor(hue, saturation, lum), board.getCellAt(calcIndex(row, column))));
 		}
 		pfs.close();
 		playerLoad = true;
@@ -595,7 +597,7 @@ public class ClueGame extends JFrame {
 	}
 	
 	public void startupMessages(){
-		humanPlayersInput();
+		setHumanPlayers();
 		JOptionPane.showMessageDialog(this, "You are the degenerate " + this.getHuman().getName() + ".\nThings seem off, because you can only recall"
 						+ " colors in RGB format; you have completely forgotten their associated names!\nYou are obsessed with the color #" + Integer.toHexString(this.getHuman().getColor().getRGB()).substring(2),
 						"Je vous presente Cluedo!", JOptionPane.INFORMATION_MESSAGE);
@@ -607,6 +609,18 @@ public class ClueGame extends JFrame {
 				+ " deduce the room he was murdered in to give his family closure.\nThe murder weapon will fetch quite a price on the Angolian Black Market. It will also allow you to break out of the Ch�teau.\n"
 				+ "The murderer will also need to meet with an 'unfortunate accident' for killing your second favorite professor.\n\nBonne chance!", "Que ferez-vous?", JOptionPane.INFORMATION_MESSAGE);
 		
+	}
+	
+	public void setHumanPlayers() {
+		humanPlayersInput();
+		
+		for (int i=0; i < numHumans; i++) {
+			int randomIndex = randGen.nextInt(6);
+			while (players.get(randomIndex).getClass() == HumanPlayer.class)
+				randomIndex = randGen.nextInt(6);
+			players.set(randomIndex, new HumanPlayer(players.get(randomIndex)));
+			JOptionPane.showMessageDialog(this, "Player " + (i+1) + ", you are " + players.get(randomIndex).getName() + ".");
+		}
 	}
 	
 	public void humanPlayersInput() {
