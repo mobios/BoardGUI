@@ -29,10 +29,15 @@ public abstract class Player {
 	};
 	
 	public Player(Player p) {
-		if (this == p) {
+		super();
+		
+		if (this.equals(p)) {
 			return;
 		}
-		
+
+		this.name = p.name;
+		this.position = p.position;
+		this.color = p.color;
 		this.knownCards = p.knownCards;
 		this.myCards = p.myCards;
 	}

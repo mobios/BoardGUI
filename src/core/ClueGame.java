@@ -609,13 +609,15 @@ public class ClueGame extends JFrame {
 	}
 	
 	public void humanPlayersInput() {
-		try {
-			while (numHumans < 1 || numHumans > 6) {
-				numHumans = Integer.parseInt(JOptionPane.showInputDialog(this, 
-						"Input the number of humans playing this game (max of 6):"));
+		while(true) {
+			try {
+				while (numHumans < 1 || numHumans > 6) {
+					numHumans = Integer.parseInt(JOptionPane.showInputDialog(this, 
+							"Input the number of humans playing this game (max of 6):"));
+				}
+				return;
+			} catch(NumberFormatException e) {
 			}
-		} catch(NumberFormatException e) {
-			humanPlayersInput();
 		}
 	}
 	
