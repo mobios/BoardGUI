@@ -33,6 +33,7 @@ public class ClueGame extends JFrame {
 	private List<Card> solution;
 	private List<Player> players;
 	private int playerTurnIndex;
+	private int numHumans;
 	
 	private String playerConfig, CardsConfig;
 	private final int solutionNum = Card.CardType.size;
@@ -594,6 +595,7 @@ public class ClueGame extends JFrame {
 	}
 	
 	public void startupMessages(){
+		humanPlayersInput();
 		JOptionPane.showMessageDialog(this, "You are the degenerate " + this.getHuman().getName() + ".\nThings seem off, because you can only recall"
 						+ " colors in RGB format; you have completely forgotten their associated names!\nYou are obsessed with the color #" + Integer.toHexString(this.getHuman().getColor().getRGB()).substring(2),
 						"Je vous presente Cluedo!", JOptionPane.INFORMATION_MESSAGE);
@@ -605,6 +607,13 @@ public class ClueGame extends JFrame {
 				+ " deduce the room he was murdered in to give his family closure.\nThe murder weapon will fetch quite a price on the Angolian Black Market. It will also allow you to break out of the Ch�teau.\n"
 				+ "The murderer will also need to meet with an 'unfortunate accident' for killing your second favorite professor.\n\nBonne chance!", "Que ferez-vous?", JOptionPane.INFORMATION_MESSAGE);
 		
+	}
+	
+	public void humanPlayersInput() {
+		while (numHumans < 1 || numHumans > 6) {
+			numHumans = Integer.parseInt(JOptionPane.showInputDialog(this, 
+					"Input the number of humans playing this game (max of 6): "));
+		}
 	}
 	
 	public int calcIndex(BoardCell position) {
