@@ -34,4 +34,8 @@ public class HumanPlayer extends Player {
 		return;
 	}
 	
+	public void divulgeCards(clueGame.PanelInfo argPanel){
+		for(Card card : myCards)
+			argPanel.add(card.getType().name(), card.getName());
+	}
 }

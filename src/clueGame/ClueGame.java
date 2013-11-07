@@ -38,6 +38,7 @@ public class ClueGame extends JFrame {
 	private final int solutionNum = Card.CardType.size;
 	private Board board;
 	private ControlPanel controlPanel;
+	private clueGame.PanelInfo humanInfo;
 	private static boolean boardLoad = false, playerLoad = false, cardLoad = false, deal = false, sol = false;//Most definately need
 	private Random randGen;//to refactor state checking
 	
@@ -91,12 +92,20 @@ public class ClueGame extends JFrame {
 		add(board);
 		add(BorderLayout.SOUTH, controlPanel);
 		board.associateMouseListener(new mouseOnBoardListener());
+		
+		humanInfo = new clueGame.PanelInfo();
+		for(Player possibleHuman : players)
+			if(possibleHuman.getClass() == HumanPlayer.class)
+				((HumanPlayer)possibleHuman).divulgeCards(humanInfo);
+		
+		add(BorderLayout.EAST, humanInfo);
 	}
 
 	public void setupControlPanel(){
 		controlPanel = new ControlPanel();
 		controlPanel.associateButtonListener(new NextPlayerListener(), ControlPanel.specifyButton.NEXT);
 	}
+	
 	public class NextPlayerListener implements ActionListener{
 		public void actionPerformed(ActionEvent e){
 			if(!engine.isHuman())
@@ -571,6 +580,7 @@ public class ClueGame extends JFrame {
 		while(true){
 			start = System.nanoTime();
 			game.repaint();
+			game.humanInfo.repaint();
 			elapsed = System.nanoTime() - start;
 			if(16 > elapsed/1000000)
 				try {
@@ -582,7 +592,7 @@ public class ClueGame extends JFrame {
 	
 	public static void startupMessages(ClueGame game){
 		JOptionPane.showMessageDialog(game, "You are the degenerate " + game.getHuman().getName() + ".\nThings seem off, because you can only recall"
-						+ " colors in RGB format; you have completely forgotten their associated names!\nYou are obsessed with " + Integer.toHexString(game.getHuman().getColor().getRGB()),
+						+ " colors in RGB format; you have completely forgotten their associated names!\nYou are obsessed with the color " + Integer.toHexString(game.getHuman().getColor().getRGB()),
 						"Je vous presente Cluedo!", JOptionPane.INFORMATION_MESSAGE);
 		
 		JOptionPane.showMessageDialog(game, "You are calling on your second favorite professor, Dr. Black, who is an eccentric, affluent recluse with a penchant for collecting abnormal weapons."
