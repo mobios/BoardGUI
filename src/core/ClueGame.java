@@ -619,7 +619,7 @@ public class ClueGame extends JFrame {
 			while (players.get(randomIndex).getClass() == HumanPlayer.class)
 				randomIndex = randGen.nextInt(6);
 			players.set(randomIndex, new HumanPlayer(players.get(randomIndex)));
-			JOptionPane.showMessageDialog(this, "Player " + (i+1) + ", you are " + players.get(randomIndex).getName());
+			JOptionPane.showMessageDialog(this, "Player " + (i+1) + ", you are " + players.get(randomIndex).getName() + ".");
 		}
 	}
 	
