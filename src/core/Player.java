@@ -29,17 +29,14 @@ public abstract class Player {
 	};
 	
 	public Player(Player p) {
-		super();
+		this();
 		
 		if (this.equals(p)) {
 			return;
 		}
-
-		this.name = p.name;
-		this.position = p.position;
-		this.color = p.color;
+		
+		set(p.name, new ArrayList<Card>(p.myCards), p.color, p.position);
 		this.knownCards = p.knownCards;
-		this.myCards = p.myCards;
 	}
 	
 	public Player set(String name, ArrayList<Card> myCards, Color myColor, BoardCell myPosition){
