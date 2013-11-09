@@ -33,7 +33,6 @@ public class ControlPanel extends JPanel {
 		add(BorderLayout.WEST,whoseTurn);
 
 		handbook = new JButton("Handbook");
-		suggest = new JButton("Make a suggestion");
 		accuse = new JButton("Make an Accusation");
 		next = new JButton("End Turn");
 		
@@ -103,21 +102,18 @@ public class ControlPanel extends JPanel {
 		
 		case HANDBOOK:
 			handbook.addActionListener(handler);
+			break;
 			
 		case ACCUSE:
 			accuse.addActionListener(handler);
-			break;
 			
-		case SUGGEST:
-			suggest.addActionListener(handler);
 		}
 	}
 	
 	public enum specifyButton{
 		NEXT,
 		HANDBOOK,
-		ACCUSE,
-		SUGGEST;
+		ACCUSE;
 	}
 	
 	public void setAllowAccuse(boolean allow){
@@ -126,9 +122,5 @@ public class ControlPanel extends JPanel {
 	
 	public boolean getAllowAccuse(){
 		return accuse.isEnabled();
-	}
-	
-	public void setAllowSuggest(boolean suggest){
-		this.suggest.setEnabled(suggest);
 	}
 }
