@@ -17,11 +17,15 @@ import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
+import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.ListSelectionModel;
 
 public class ClueGame extends JFrame {
 	private static final long serialVersionUID = 1409857978233118403L;
@@ -124,10 +128,6 @@ public class ClueGame extends JFrame {
 			public void actionPerformed(ActionEvent e){ 
 				notes.setVisible(true);
 			}
-	}
-	
-	public class accusationListener implements ActionListener{
-		
 	}
 	
 	public Player nextPlayer(){
