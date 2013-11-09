@@ -17,7 +17,7 @@ public class ControlPanel extends JPanel {
 	
 	private static final long serialVersionUID = 5883166420109755868L;
 	private CluedoTextField whoseTurn;
-	private JButton next, accuse, suggest;
+	private JButton next, handbook, accuse, suggest;
 	private CluedoAnonymousPanel die;
 
 	public ControlPanel() {
@@ -32,12 +32,12 @@ public class ControlPanel extends JPanel {
 		whoseTurn = new CluedoPresentationField("Whose Turn?", 20);
 		add(BorderLayout.WEST,whoseTurn);
 
-
+		handbook = new JButton("Handbook");
 		suggest = new JButton("Make a suggestion");
 		accuse = new JButton("Make an Accusation");
 		next = new JButton("End Turn");
-
-		add(BorderLayout.EAST,suggest);
+		
+		add(BorderLayout.EAST, handbook);
 		add(BorderLayout.EAST,accuse);
 		add(BorderLayout.EAST,next);
 
@@ -100,6 +100,9 @@ public class ControlPanel extends JPanel {
 		case NEXT:
 			next.addActionListener(handler);
 			break;
+		
+		case HANDBOOK:
+			handbook.addActionListener(handler);
 			
 		case ACCUSE:
 			accuse.addActionListener(handler);
@@ -112,6 +115,7 @@ public class ControlPanel extends JPanel {
 	
 	public enum specifyButton{
 		NEXT,
+		HANDBOOK,
 		ACCUSE,
 		SUGGEST;
 	}

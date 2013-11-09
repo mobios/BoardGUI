@@ -92,6 +92,7 @@ public class ClueGame extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		add(board);
 		add(BorderLayout.SOUTH, controlPanel);
+		controlPanel.associateButtonListener(new dNotesListener(), ControlPanel.specifyButton.HANDBOOK);
 		board.associateMouseListener(new mouseOnBoardListener());
 		
 		humanInfo = new guiPanels.PanelInfo();
@@ -104,7 +105,7 @@ public class ClueGame extends JFrame {
 		setVisible(true);
 		startupMessages();
 	}
-
+	
 	public void setupControlPanel(){
 		controlPanel = new ControlPanel();
 		controlPanel.associateButtonListener(new NextPlayerListener(), ControlPanel.specifyButton.NEXT);
@@ -119,6 +120,12 @@ public class ClueGame extends JFrame {
 		}
 	}
 
+	public class dNotesListener implements ActionListener{				
+			public void actionPerformed(ActionEvent e){ 
+				notes.setVisible(true);
+			}
+	}
+	
 	public Player nextPlayer(){
 		advancePlayersTurns();
 		
@@ -135,7 +142,7 @@ public class ClueGame extends JFrame {
 		
 		return workingplayer;
 	}
-
+	
 	private JMenu createFileMenu() { // to create a MenuBar Menu named file
 
 		JMenu menu = new JMenu("File"); 
@@ -394,8 +401,6 @@ public class ClueGame extends JFrame {
 			}
 			throw new RuntimeException("Loading configuration files failed, check the output or log for more information.");
 		}
-		
-		
 	}
 	
 	public void selectAnswer(){

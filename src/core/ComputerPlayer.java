@@ -108,9 +108,11 @@ public class ComputerPlayer extends Player {
 		
 		return retlist;
 	}
-	
+	/*
 	public RoomCell pickTarget(List<BoardCell> possibilities){
 		int[][] distances = new int[possibilities.size()][2];
 		
 	}
+	*/
+	
 }
