@@ -92,7 +92,6 @@ public class ClueGame extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		add(board);
 		add(BorderLayout.SOUTH, controlPanel);
-		controlPanel.associateButtonListener(new dNotesListener(), ControlPanel.specifyButton.HANDBOOK);
 		board.associateMouseListener(new mouseOnBoardListener());
 		
 		humanInfo = new guiPanels.PanelInfo();
@@ -109,6 +108,7 @@ public class ClueGame extends JFrame {
 	public void setupControlPanel(){
 		controlPanel = new ControlPanel();
 		controlPanel.associateButtonListener(new NextPlayerListener(), ControlPanel.specifyButton.NEXT);
+		controlPanel.associateButtonListener(new dNotesListener(), ControlPanel.specifyButton.HANDBOOK);
 	}
 	
 	public class NextPlayerListener implements ActionListener{
@@ -124,6 +124,10 @@ public class ClueGame extends JFrame {
 			public void actionPerformed(ActionEvent e){ 
 				notes.setVisible(true);
 			}
+	}
+	
+	public class accusationListener implements ActionListener{
+		
 	}
 	
 	public Player nextPlayer(){
