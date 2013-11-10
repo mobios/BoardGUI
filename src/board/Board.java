@@ -1,4 +1,4 @@
-package core;
+package board;
 
 import java.awt.Graphics;
 import java.awt.event.MouseListener;
@@ -10,12 +10,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.TreeMap;
 
 import javax.swing.JPanel;
+
+import core.BadConfigFormatException;
+import core.ClueGame;
+import core.DoorDirection;
+import core.Player;
 
 
 public class Board extends JPanel{
@@ -422,4 +428,11 @@ public class Board extends JPanel{
 		this.pcc = pcc;
 	}
 
+	public List<RoomCell> getAllDoors(){
+		List<RoomCell> ret = new ArrayList<RoomCell>();
+		for(BoardCell cell : cellsList)
+			if(cell.getClass() == RoomCell.class && ((RoomCell)cell).isDoorway())
+				ret.add((RoomCell) cell);
+		return ret;
+	}
 }

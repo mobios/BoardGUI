@@ -4,6 +4,9 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Random;
 
+import board.Board;
+import board.BoardCell;
+
 public class HumanPlayer extends Player {
 
 	public HumanPlayer(String name, ArrayList<Card> myCards, Color color, BoardCell location) {

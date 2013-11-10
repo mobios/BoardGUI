@@ -23,6 +23,9 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
+import board.Board;
+import board.BoardCell;
+
 public class ClueGame extends JFrame {
 	private static final long serialVersionUID = 1409857978233118403L;
 	private static ArrayList<Card> allCards;
@@ -606,7 +609,7 @@ public class ClueGame extends JFrame {
 				+ "\nYour common sense begins to tingle, and you realize Dr. Black has been murdered!\nYou rush for the exit, but find none, as the house has only entrances.", "Ou es-tu?", JOptionPane.INFORMATION_MESSAGE);
 	
 		JOptionPane.showMessageDialog(this, "Things are not looking well, gonze.\n\nThe late Dr. Black's remnants blend nicely with the thick layer of dust coating the house -- you must"
-				+ " deduce the room he was murdered in to give his family closure.\nThe murder weapon will fetch quite a price on the Angolian Black Market. It will also allow you to break out of the Ch�teau.\n"
+				+ " deduce the room he was murdered in to give his family closure.\nThe murder weapon will fetch quite a price on the Angolian Black Market. It will also allow you to break out of the Chateau.\n"
 				+ "The murderer will also need to meet with an 'unfortunate accident' for killing your second favorite professor.\n\nBonne chance!", "Que ferez-vous?", JOptionPane.INFORMATION_MESSAGE);
 		
 	}

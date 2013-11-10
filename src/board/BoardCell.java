@@ -1,4 +1,4 @@
-package core;
+package board;
 
 import java.awt.Graphics;
 import java.awt.Point;

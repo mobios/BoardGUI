@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import board.Board;
+import board.BoardCell;
 import core.Card.CardType;
 
 public abstract class Player {
