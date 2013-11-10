@@ -17,11 +17,15 @@ import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
+import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.ListSelectionModel;
 
 import board.Board;
 import board.BoardCell;
@@ -107,10 +111,11 @@ public class ClueGame extends JFrame {
 		setVisible(true);
 		startupMessages();
 	}
-
+	
 	public void setupControlPanel(){
 		controlPanel = new ControlPanel();
 		controlPanel.associateButtonListener(new NextPlayerListener(), ControlPanel.specifyButton.NEXT);
+		controlPanel.associateButtonListener(new dNotesListener(), ControlPanel.specifyButton.HANDBOOK);
 	}
 	
 	public class NextPlayerListener implements ActionListener{
@@ -122,6 +127,12 @@ public class ClueGame extends JFrame {
 		}
 	}
 
+	public class dNotesListener implements ActionListener{				
+			public void actionPerformed(ActionEvent e){ 
+				notes.setVisible(true);
+			}
+	}
+	
 	public Player nextPlayer(){
 		advancePlayersTurns();
 		
@@ -138,7 +149,7 @@ public class ClueGame extends JFrame {
 		
 		return workingplayer;
 	}
-
+	
 	private JMenu createFileMenu() { // to create a MenuBar Menu named file
 
 		JMenu menu = new JMenu("File"); 
@@ -397,8 +408,6 @@ public class ClueGame extends JFrame {
 			}
 			throw new RuntimeException("Loading configuration files failed, check the output or log for more information.");
 		}
-		
-		
 	}
 	
 	public void selectAnswer(){

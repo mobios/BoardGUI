@@ -138,7 +138,7 @@ public class ComputerPlayer extends Player {
 		
 		return retlist;
 	}
-	
+
 	public RoomCell pickTarget(List<RoomCell> allRooms){
 		Object [][] dai = new Object[allRooms.size()][2];
 		Object [][] daio = new Object[allRooms.size()][2];
@@ -235,4 +235,5 @@ public class ComputerPlayer extends Player {
 		}
 		return numofcards - cardsinhand;
 	}
+	
 }
