@@ -11,59 +11,67 @@ import java.util.Set;
 import board.Board;
 import board.BoardCell;
 import board.RoomCell;
-import board.Walkway;
 
 public class ComputerPlayer extends Player {
-	private BoardCell hPrevCell;					// I have a masochistic love for the WinAPI
 	private List<RoomCell> visited;
+	private int[][] adjMap;
 	private RoomCell targetRoom;
-	
-	
-	
-	private class adjacency{
-		public RoomCell cell;
-		public int distance;
-	}
-	
-	public ComputerPlayer(String name, ArrayList<Card> myCards, Color color, BoardCell location) {
+	private RoomCell lastRoom;
+		
+	public ComputerPlayer(String name, ArrayList<Card> myCards, Color color, BoardCell location, Board board) {
 		this();
-		set(name, myCards, color, location);
+		set(name, myCards, color, location, board);
 	}
 	
 	public ComputerPlayer() {
 		super();
-		hPrevCell = (BoardCell) new Walkway(0,0);				// should be default action, but let's just make sure
 		visited = new ArrayList<RoomCell>();
 	};
 	
 	@Override
-	public Player set(String name, ArrayList<Card> myCards, Color myColor, BoardCell myPosition){
-		return super.set(name, myCards, myColor, myPosition);
+	public Player set(String name, ArrayList<Card> myCards, Color myColor, BoardCell myPosition, Board board){
+		return super.set(name, myCards, myColor, myPosition, board);
 	}
 	
-	public BoardCell pickLocation(Random rgen, Set<BoardCell> targets){ // needs method body
+	public BoardCell pickLocation(Random rgen, Board board, Set<BoardCell> targets){ // needs method body
+		if(targetRoom.equals(getPosition()) || (getPosition().getClass() == RoomCell.class && ((RoomCell)getPosition()).getRoomInitial() == targetRoom.getRoomInitial())){
+			List<BoardCell> notroom = new ArrayList<BoardCell>();
+			for(BoardCell cell : targets){
+				 if(targetRoom.equals(cell) || (cell.getClass() == RoomCell.class && ((RoomCell)cell).getRoomInitial() == targetRoom.getRoomInitial()))
+					 continue;
+				 notroom.add(cell);
+			}
+			return board.getRandEmptyCell(rgen, notroom);
+		}
+			
 		if(targets.contains(targetRoom)){
 			BoardCell retcell = targetRoom;
 			targetRoom= null;
 			return retcell;
 		}
 
-		return pickClosestPath(new ArrayList<BoardCell>(targets), targetRoom);
+		for(BoardCell cell : targets)
+			if(cell.getClass() == RoomCell.class && ((RoomCell)cell).getRoomInitial() == targetRoom.getRoomInitial())
+				return cell;
+
+		return pickClosestPath(rgen, new ArrayList<BoardCell>(targets));
 	}
 
-	public BoardCell pickClosestPath(List<BoardCell> possibles, BoardCell target){
-		Object[][] distances = new Object[possibles.size()][2];
-		for(int i = 0; i < possibles.size(); i++){
-			distances[i][0] = i;
-			distances[i][1] = calcDistance(possibles.get(i),target);
+	public BoardCell pickClosestPath(Random rgen, List<BoardCell> possibles){
+		List<BoardCell> endpick = new ArrayList<BoardCell>();
+		int endpicksmall= 50000;
+		for(BoardCell targets : possibles){
+			int dist = adjMap[targets.getColumn()][targets.getRow()];
+			if(dist < endpicksmall){
+				endpick = new ArrayList<BoardCell>();
+				endpicksmall = dist;
+				endpick.add(targets);
+			}
+			
+			else if(dist == endpicksmall)
+				endpick.add(targets);
 		}
-		
-		int j = 0;
-		for(int i = 0; i < possibles.size(); i++)
-			if((double)distances[i][1] < (double)distances[j][1])
-				j = i;
-		
-		return possibles.get(j);
+		return ClueGame.getRandFromList(rgen, endpick);
 	}
 	
 	@Override
@@ -90,9 +98,16 @@ public class ComputerPlayer extends Player {
 
 	@Override
 	public ArrayList<Card> generateSuggestion(Random rand) {
-		
 		ArrayList<Card> ret = new ArrayList<Card>();
-		ret.add(this.getRoomPlayerIn());
+		Card room = null;
+		for(Card card : ClueGame.getAllRoomCards()){
+			if(card.getName().startsWith(((RoomCell)getPosition()).getRoomInitial()+"")){
+				room = card;
+				break;
+			}
+		}
+		if(room != null)
+			ret.add(room);
 		
 		ArrayList<Card> personCards = sieveKnownCards(ClueGame2.getAllPeopleCards());
 		ArrayList<Card> weaponCards = sieveKnownCards(ClueGame2.getAllWeaponCards());
@@ -102,29 +117,46 @@ public class ComputerPlayer extends Player {
 		return ret;
 	}	
 	
-
 	public void makeMove(Random randGen, Board board) {
-		if(targetRoom ==null)
+		if(targetRoom ==null){
 			targetRoom = pickTarget(board.getAllDoors());
+			adjMap = null;
+		}
 		
-		BoardCell oldCell = getPosition();
-		BoardCell newCell = pickLocation(randGen, board.getTargets());
-		setPosition(newCell);
-		hPrevCell = oldCell;
-		if(newCell.getClass() == RoomCell.class)
-			visited.add((RoomCell) newCell);
+		if(adjMap == null)
+			adjMap = board.generatePathing(getPosition(), targetRoom);
 		
-		//Needs to repaint the board
+		setPosition(pickLocation(randGen, board, board.getTargets()));
 	}
 
 	@Override
-	public void doTurn(Random randGen, Board board) {
+	public Object[] doTurn(Random randGen, Board board) {
 		try {
 			Thread.sleep(850);
 		} catch (InterruptedException e) {}
+		
+		if(rltd() < 2 && cltf() < 3){
+			List<Card> acc = accuse(randGen);
+			return new Object[]{2,acc.get(0),acc.get(1),acc.get(2)};
+		}
+		
+		if(rltd() < 3 && cltf() < 5){
+			if(randGen.nextFloat() > .17854f){
+				List<Card> acc = accuse(randGen);
+				return new Object[]{2,acc.get(0),acc.get(1),acc.get(2)};
+			}
+		}
+		
 		makeMove(randGen, board);
+		if(getPosition().getClass() == RoomCell.class){
+			List<Card> sugg = generateSuggestion(randGen);
+			return new Object[]{1,sugg.get(0),sugg.get(1),sugg.get(2)};
+		}
 		
+		if(getPosition() == targetRoom)
+			targetRoom = null;
 		
+		return null;
 	}
 	
 	public List<BoardCell> sievePreviousRoomCards(List<BoardCell> source){
@@ -158,7 +190,7 @@ public class ComputerPlayer extends Player {
 			dai[j][1] = 20000.d;
 		}
 		
-		if(rltd() == 0){
+		if(rltd() <= 1){
 			return allRooms.get((int)daio[0][0]);
 		}
 		
@@ -177,7 +209,7 @@ public class ComputerPlayer extends Player {
 				if(room.getName().startsWith(""+allRooms.get((int)dist[0]).getRoomInitial()))
 					visited = true;
 			
-			if(!visited)
+			if(!visited && (lastRoom == null || ((RoomCell)allRooms.get((int)dist[0])).getRoomInitial() != lastRoom.getRoomInitial()))
 				daios.add(dist);
 		}
 		
@@ -234,6 +266,13 @@ public class ComputerPlayer extends Player {
 			cardsinhand++;
 		}
 		return numofcards - cardsinhand;
+	}
+
+	
+	@Override
+	public void playerSuggested(BoardCell location) {
+		setPosition(location);
+		adjMap = null;
 	}
 	
 }

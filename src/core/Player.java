@@ -18,10 +18,11 @@ public abstract class Player {
 	private BoardCell position;
 	private Card roomPlayerIn;
 	protected boolean turnFinished;
+	protected Board board;
 	
-	Player(String name, ArrayList<Card> myCards, Color myColor, BoardCell myPosition){
+	Player(String name, ArrayList<Card> myCards, Color myColor, BoardCell myPosition, Board board){
 		this();
-		set(name, myCards, myColor, myPosition);
+		set(name, myCards, myColor, myPosition, board);
 	}
 	
 	public Player(){
@@ -37,21 +38,27 @@ public abstract class Player {
 			return;
 		}
 		
-		set(p.name, new ArrayList<Card>(p.myCards), p.color, p.position);
+		set(p.name, new ArrayList<Card>(p.myCards), p.color, p.position, p.board);
 		this.knownCards = p.knownCards;
 	}
 	
-	public Player set(String name, ArrayList<Card> myCards, Color myColor, BoardCell myPosition){
+	public Player set(String name, ArrayList<Card> myCards, Color myColor, BoardCell myPosition, Board board){
 		this.name = name;
 		this.myCards = myCards;
 		this.position = myPosition;
 		this.color = myColor;
+		this.board = board;
 		return this;
 	}
 	
-	public void drawPlayers(Graphics g){
+	public void drawPlayer(Graphics g){
 		g.setColor(color);
-		g.fillOval(position.getX(), position.getY(), position.getWidth() - 1, position.getHeight() - 1);
+		int x,y,width,height;
+		x = position.getX()+2*(board.playerCountCell(getPosition())-1);
+		y = position.getY()+2*(board.playerCountCell(getPosition())-1);
+		width = position.getWidth()-2*(board.playerCountCell(getPosition())-1);
+		height = position.getHeight()-2*(board.playerCountCell(getPosition())-1);
+		g.fillOval(x,y,width,height);
 	}
 	
 	public String getName() {
@@ -154,8 +161,7 @@ public abstract class Player {
 	
 	public abstract ArrayList<Card> accuse(Random rand);
 	
-	public abstract void doTurn(Random randGen, Board board);
-	
+	public abstract Object[] doTurn(Random randGen, Board board);
 	
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -181,4 +187,5 @@ public abstract class Player {
 		turnFinished = b;
 	}
 
+	public abstract void playerSuggested(BoardCell location);
 }
