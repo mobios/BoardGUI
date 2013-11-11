@@ -364,7 +364,12 @@ public class Board extends JPanel{
 		}
 
 		for (int adjCell : adjacentCells) {   // for each unvisited adjacent cell
-			if (steps == 1 || getCellAt(adjCell).isDoorway()){						
+			if (steps == 1 || getCellAt(adjCell).isDoorway()){	
+				for (Player p : clueGamePtr.getPlayers()) {
+					if (calcIndex(p.getPosition().getRow(), p.getPosition().getColumn()) == adjCell) {
+						return;
+					}
+				}
 				targets.add(getCellAt(adjCell));
 			} else {
 				Targets(adjCell, steps-1);

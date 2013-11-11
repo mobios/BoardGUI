@@ -64,6 +64,12 @@ public class Card implements Comparable<Card>{
 		this.name = name;
 		this.type = type;
 	}
+	
+	public Card(Card c) {
+		super();
+		this.name = c.name;
+		this.type = c.type;
+	}
 
 	@Override
 	public boolean equals(Object obj) {

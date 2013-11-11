@@ -2,6 +2,8 @@ package core;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -17,15 +19,21 @@ import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
+import javax.swing.BorderFactory;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
+import javax.swing.border.EtchedBorder;
+import javax.swing.border.TitledBorder;
 
 import board.Board;
 import board.BoardCell;
@@ -41,6 +49,7 @@ public class ClueGame extends JFrame {
 	private List<Player> players;
 	private int playerTurnIndex;
 	private int numHumans;
+	private Card accusePlayer, accuseRoom, accuseWeapon;
 	
 	private String playerConfig, CardsConfig;
 	private final int solutionNum = Card.CardType.size;
@@ -55,6 +64,7 @@ public class ClueGame extends JFrame {
 	
 	private JMenuBar menuBar;
 	private DetectiveNotes notes;
+	private JPanel accusationPanel;
 	
 /*	public ClueGame(String pConfig, String cConfig, String lConfig, String legCongic){
 		this();
@@ -94,6 +104,7 @@ public class ClueGame extends JFrame {
 		setBackground(Color.gray);
 		menuBar.add(createFileMenu());
 		
+		accusationPanel = new AccusationPanel(this);
 		setupControlPanel();
 		setTitle("Clue Game");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -116,6 +127,7 @@ public class ClueGame extends JFrame {
 		controlPanel = new ControlPanel();
 		controlPanel.associateButtonListener(new NextPlayerListener(), ControlPanel.specifyButton.NEXT);
 		controlPanel.associateButtonListener(new dNotesListener(), ControlPanel.specifyButton.HANDBOOK);
+		controlPanel.associateButtonListener(new accusationListener(), ControlPanel.specifyButton.ACCUSE);
 	}
 	
 	public class NextPlayerListener implements ActionListener{
@@ -133,11 +145,25 @@ public class ClueGame extends JFrame {
 			}
 	}
 	
+	public class accusationListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			accusationPanel.setVisible(true);
+		}
+	}
+	
+	
+	
 	public Player nextPlayer(){
 		advancePlayersTurns();
 		
 		Player workingplayer = getPlayersTurn();
 		controlPanel.updatePlayerTurnDisplay(workingplayer.getName());
+		if (workingplayer.getClass() == HumanPlayer.class) {
+			humanInfo.updatePlayerHandDisplay(workingplayer.getMyCards());
+		} else {
+			humanInfo.updatePlayerHandDisplay(new ArrayList<Card>());
+		}
+		
 			
 		//Still need to update the game control panel to display whose turn it is
 			
@@ -173,6 +199,87 @@ public class ClueGame extends JFrame {
 
 		exitItem.addActionListener(new MenuItemListener());
 		return exitItem;
+	}
+	
+	public class AccusationPanel extends JPanel {
+		private JComboBox<String> playerBox, roomBox, weaponBox;
+		private ClueGame cg;
+		
+		public AccusationPanel(ClueGame cg) {
+			this.cg = cg;
+			JFrame.setDefaultLookAndFeelDecorated(true);
+			setBorder(new TitledBorder (new EtchedBorder(), "Accusation"));
+			setLayout(new GridLayout(0,3));
+			
+			//String roomName = null;
+			this.playerBox = createAccusationCombo(allPeopleCards);
+			this.roomBox = createAccusationCombo(allRoomCards);
+			this.weaponBox = createAccusationCombo(allWeaponCards);
+			ComboListener listener = new ComboListener();
+			playerBox.addActionListener(listener);
+			roomBox.addActionListener(listener);
+			weaponBox.addActionListener(listener);
+			
+			/*
+			if (players.get(playerTurnIndex).getRoomPlayerIn() != null) {
+				room = players.get(playerTurnIndex).getRoomPlayerIn();
+				roomName = room.toString();
+				cg.accuseRoom = room;
+			}
+			*/
+			
+			JLabel playerLabel = new JLabel("Player");
+			JLabel roomLabel = new JLabel("Room");
+			JLabel weaponLabel = new JLabel("Weapon");
+			
+			add(roomLabel);
+			add(playerLabel);
+			add(weaponLabel);
+			add(playerBox);
+			add(roomBox);
+			add(weaponBox);
+		}
+		private JComboBox<String> createAccusationCombo(ArrayList<Card> cardList) {
+			JComboBox<String> combo = new JComboBox<String>();
+			String[] cardTypes = new String[cardList.size()];
+			
+			for (int i=0; i < cardList.size(); i++){
+				cardTypes[i] = cardList.get(i).toString();
+			}
+			
+			for (String s : cardTypes) {
+				combo.addItem(s);
+			}
+			
+			return combo;
+		}
+		
+		private class ComboListener implements ActionListener {
+			  public void actionPerformed(ActionEvent e) {
+			    if (e.getSource() == playerBox) {
+			    	for(Card personCard : allPeopleCards) {
+						if (personCard.toString().equals(playerBox.getSelectedItem().toString())) {
+							Card person = new Card(personCard);
+							cg.accusePlayer = person;
+						}
+					}
+			    } else if (e.getSource() == weaponBox) {
+			    	for(Card weaponCard : allWeaponCards) {
+						if (weaponCard.toString().equals(weaponBox.getSelectedItem().toString())) {
+							Card weapon = new Card(weaponCard);
+							cg.accuseWeapon = weapon;
+						}
+					}
+			    } else if (e.getSource() == roomBox) {
+			    	for(Card roomCard : allRoomCards) {
+						if (roomCard.toString().equals(roomBox.getSelectedItem().toString())) {
+							Card weapon = new Card(roomCard);
+							cg.accuseRoom = weapon;
+						}
+					}
+			    }
+			  }
+		}
 	}
 	
 	private JMenuItem createFileDetectiveNotesItem(){
