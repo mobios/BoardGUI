@@ -1,4 +1,4 @@
-package core;
+package guiPanels;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -17,7 +17,7 @@ public class ControlPanel extends JPanel {
 	
 	private static final long serialVersionUID = 5883166420109755868L;
 	private CluedoTextField whoseTurn;
-	private JButton next, handbook, accuse, suggest;
+	private JButton next, handbook, accuse;
 	private CluedoAnonymousPanel die;
 
 	public ControlPanel() {

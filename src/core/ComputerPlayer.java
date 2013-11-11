@@ -11,20 +11,12 @@ import java.util.Set;
 import board.Board;
 import board.BoardCell;
 import board.RoomCell;
-import board.Walkway;
 
 public class ComputerPlayer extends Player {
-	private BoardCell hPrevCell;					// I have a masochistic love for the WinAPI
 	private List<RoomCell> visited;
+	private int[][] adjMap;
 	private RoomCell targetRoom;
-	
-	
-	
-	private class adjacency{
-		public RoomCell cell;
-		public int distance;
-	}
-	
+		
 	public ComputerPlayer(String name, ArrayList<Card> myCards, Color color, BoardCell location) {
 		this();
 		set(name, myCards, color, location);
@@ -32,7 +24,6 @@ public class ComputerPlayer extends Player {
 	
 	public ComputerPlayer() {
 		super();
-		hPrevCell = (BoardCell) new Walkway(0,0);				// should be default action, but let's just make sure
 		visited = new ArrayList<RoomCell>();
 	};
 	
@@ -48,22 +39,28 @@ public class ComputerPlayer extends Player {
 			return retcell;
 		}
 
-		return pickClosestPath(new ArrayList<BoardCell>(targets), targetRoom);
+		for(BoardCell cell : targets)
+			if(cell.getClass() == RoomCell.class && ((RoomCell)cell).getRoomInitial() == targetRoom.getRoomInitial())
+				return cell;
+
+		return pickClosestPath(rgen, new ArrayList<BoardCell>(targets));
 	}
 
-	public BoardCell pickClosestPath(List<BoardCell> possibles, BoardCell target){
-		Object[][] distances = new Object[possibles.size()][2];
-		for(int i = 0; i < possibles.size(); i++){
-			distances[i][0] = i;
-			distances[i][1] = calcDistance(possibles.get(i),target);
+	public BoardCell pickClosestPath(Random rgen, List<BoardCell> possibles){
+		List<BoardCell> endpick = new ArrayList<BoardCell>();
+		int endpicksmall= 50000;
+		for(BoardCell targets : possibles){
+			int dist = adjMap[targets.getColumn()][targets.getRow()];
+			if(dist < endpicksmall){
+				endpick = new ArrayList<BoardCell>();
+				endpicksmall = dist;
+				endpick.add(targets);
+			}
+			
+			else if(dist == endpicksmall)
+				endpick.add(targets);
 		}
-		
-		int j = 0;
-		for(int i = 0; i < possibles.size(); i++)
-			if((double)distances[i][1] < (double)distances[j][1])
-				j = i;
-		
-		return possibles.get(j);
+		return ClueGame.getRandFromList(rgen, endpick);
 	}
 	
 	@Override
@@ -104,21 +101,25 @@ public class ComputerPlayer extends Player {
 	
 
 	public void makeMove(Random randGen, Board board) {
-		if(targetRoom ==null)
+		if(targetRoom ==null){
 			targetRoom = pickTarget(board.getAllDoors());
+			adjMap = null;
+		}
 		
-		BoardCell oldCell = getPosition();
+		if(adjMap == null)
+			adjMap = board.generatePathing(getPosition(), targetRoom);
+		
 		BoardCell newCell = pickLocation(randGen, board.getTargets());
 		setPosition(newCell);
-		hPrevCell = oldCell;
-		if(newCell.getClass() == RoomCell.class)
-			visited.add((RoomCell) newCell);
+		if(newCell.getClass() == RoomCell.class){
+			generateSuggetsion(rand);
 		
-		//Needs to repaint the board
+		}
+		
 	}
 
 	@Override
-	public void doTurn(Random randGen, Board board) {
+	public Object[] doTurn(Random randGen, Board board) {
 		try {
 			Thread.sleep(850);
 		} catch (InterruptedException e) {}

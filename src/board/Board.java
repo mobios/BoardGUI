@@ -6,12 +6,15 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.TreeMap;
@@ -20,7 +23,6 @@ import javax.swing.JPanel;
 
 import core.BadConfigFormatException;
 import core.ClueGame;
-import core.DoorDirection;
 import core.Player;
 
 
@@ -433,6 +435,36 @@ public class Board extends JPanel{
 		for(BoardCell cell : cellsList)
 			if(cell.getClass() == RoomCell.class && ((RoomCell)cell).isDoorway())
 				ret.add((RoomCell) cell);
+		return ret;
+	}
+	
+	public int[][] generatePathing(BoardCell position, BoardCell target){
+		int[][] ret = new int[getNumRows()][getNumColumns()];
+		
+		Collection<BoardCell> seen = new HashSet<BoardCell>();
+		Queue<Path> togo = new ArrayDeque<Path>();
+		togo.add(new Path(target,0));
+		long counter = System.nanoTime()/1000000;
+		
+		while(!seen.contains(position) || (((System.nanoTime()/1000000)-counter < 250) && !togo.isEmpty())){
+			Path working = togo.remove();
+			seen.add(working.getCell());
+			BoardCell wc = working.getCell();
+			ret[wc.getRow()][wc.getColumn()] = working.getDistance();
+			for(BoardCell possible : Cardinal.cardinals(this, wc)){
+				if(possible.getClass() == RoomCell.class)
+					continue;
+				
+				if(!seen.contains(possible) && !togo.contains(new Path(possible, working.getDistance()+1))){
+					togo.add(new Path(possible, working.getDistance()+1));
+					continue;
+				}
+				
+				if(seen.contains(possible))
+					if(ret[wc.getRow()][wc.getColumn()] > working.getDistance()+1)
+						togo.add(new Path(possible, working.getDistance()+1));
+			}
+		}
 		return ret;
 	}
 }

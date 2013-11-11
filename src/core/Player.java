@@ -154,8 +154,7 @@ public abstract class Player {
 	
 	public abstract ArrayList<Card> accuse(Random rand);
 	
-	public abstract void doTurn(Random randGen, Board board);
-	
+	public abstract Object[] doTurn(Random randGen, Board board);
 	
 	public boolean equals(Object obj) {
 		if (this == obj)
