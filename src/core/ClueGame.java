@@ -722,6 +722,7 @@ public class ClueGame extends JFrame {
 							wait();									// Fully event driven -- engine blocks until human ends turn
 						} catch (InterruptedException e) {}
 					}
+					
 				}
 				
 				else{

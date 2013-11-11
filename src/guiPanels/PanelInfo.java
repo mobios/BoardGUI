@@ -1,12 +1,16 @@
 package guiPanels;
 
 import java.awt.GridLayout;
+import java.util.ArrayList;
+
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
+
+import core.Card;
 
 public class PanelInfo extends JPanel{
 	private static final long serialVersionUID = -521373223935283250L;
@@ -54,5 +58,16 @@ public class PanelInfo extends JPanel{
 			add(cardName);
 			setVisible(true);
 		}
+	}
+	
+	public void updatePlayerHandDisplay(ArrayList<Card> cards) {
+		removeAll();
+		thisDeck.removeAll();
+		
+		for (Card card : cards) {
+			thisDeck.add(card.getType().toString(), card.getName());
+		}
+		
+		add(thisDeck);
 	}
 }
