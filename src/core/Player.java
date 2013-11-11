@@ -149,7 +149,7 @@ public abstract class Player {
 		ArrayList<Card> paramCopy = new ArrayList<Card>(params);
 		params.removeAll(myCards);
 		paramCopy.removeAll(params);
-		return ((paramCopy.size() > 0 ) ? ClueGame.getRandFromList(rand, paramCopy) : null);
+		return ((paramCopy.size() > 0 ) ? ClueGame2.getRandFromList(rand, paramCopy) : null);
 	}
 	
 	public abstract ArrayList<Card> accuse(Random rand);

@@ -69,13 +69,13 @@ public class ComputerPlayer extends Player {
 	@Override
 	public ArrayList<Card> accuse(Random rgen) { // Only public to make junit tests... should be private for release
 												// Does not make use of sieveKnownCards function YET
-		ArrayList<Card> workingSet = new ArrayList<Card>(ClueGame.getAllCards());
+		ArrayList<Card> workingSet = new ArrayList<Card>(ClueGame2.getAllCards());
 		workingSet.remove(myCards);
 		workingSet.remove(knownCards);
 		
-		ArrayList<Card> personCards = new ArrayList<Card>(ClueGame.getAllPeopleCards());
-		ArrayList<Card> weaponCards = new ArrayList<Card>(ClueGame.getAllWeaponCards());
-		ArrayList<Card> roomCards = new ArrayList<Card>(ClueGame.getAllRoomCards());
+		ArrayList<Card> personCards = new ArrayList<Card>(ClueGame2.getAllPeopleCards());
+		ArrayList<Card> weaponCards = new ArrayList<Card>(ClueGame2.getAllWeaponCards());
+		ArrayList<Card> roomCards = new ArrayList<Card>(ClueGame2.getAllRoomCards());
 		
 		personCards.removeAll(workingSet);
 		weaponCards.removeAll(workingSet);
@@ -94,10 +94,10 @@ public class ComputerPlayer extends Player {
 		ArrayList<Card> ret = new ArrayList<Card>();
 		ret.add(this.getRoomPlayerIn());
 		
-		ArrayList<Card> personCards = sieveKnownCards(ClueGame.getAllPeopleCards());
-		ArrayList<Card> weaponCards = sieveKnownCards(ClueGame.getAllWeaponCards());
-		ret.add(ClueGame.getRandFromList(rand, personCards));
-		ret.add(ClueGame.getRandFromList(rand, weaponCards));
+		ArrayList<Card> personCards = sieveKnownCards(ClueGame2.getAllPeopleCards());
+		ArrayList<Card> weaponCards = sieveKnownCards(ClueGame2.getAllWeaponCards());
+		ret.add(ClueGame2.getRandFromList(rand, personCards));
+		ret.add(ClueGame2.getRandFromList(rand, weaponCards));
 		
 		return ret;
 	}	
@@ -195,7 +195,7 @@ public class ComputerPlayer extends Player {
 	}
 	
 	private int rltd(){
-		int numofrooms = ClueGame.getAllRoomCards().size();
+		int numofrooms = ClueGame2.getAllRoomCards().size();
 		int roomsinhand = 0;
 		
 		for(Card card : knownCards){
@@ -216,7 +216,7 @@ public class ComputerPlayer extends Player {
 	}
 	
 	private int cltf(){
-		int numofcards = ClueGame.getAllPeopleCards().size() + ClueGame.getAllWeaponCards().size();
+		int numofcards = ClueGame2.getAllPeopleCards().size() + ClueGame2.getAllWeaponCards().size();
 		int cardsinhand = 0;
 		
 		for(Card card : knownCards){

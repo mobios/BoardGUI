@@ -19,7 +19,7 @@ import java.util.TreeMap;
 import javax.swing.JPanel;
 
 import core.BadConfigFormatException;
-import core.ClueGame;
+import core.ClueGame2;
 import core.DoorDirection;
 import core.Player;
 
@@ -34,7 +34,7 @@ public class Board extends JPanel{
 	private int numRows, numColumns;
 	private String legendFile, layoutFile;
 	private BoardCell pcc;
-	private ClueGame clueGamePtr;
+	private ClueGame2 clueGamePtr;
 	
 	public String getLegendFile() {
 		return legendFile;
@@ -69,7 +69,7 @@ public class Board extends JPanel{
 		calcAdjacencies();
 	}
 	
-	public void setGame(ClueGame g) {
+	public void setGame(ClueGame2 g) {
 		clueGamePtr = g;
 	}
 	

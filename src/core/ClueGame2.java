@@ -38,7 +38,7 @@ import javax.swing.border.TitledBorder;
 import board.Board;
 import board.BoardCell;
 
-public class ClueGame extends JFrame {
+public class ClueGame2 extends JFrame {
 	private static final long serialVersionUID = 1409857978233118403L;
 	private static ArrayList<Card> allCards;
 	private static ArrayList<Card> allRoomCards;
@@ -49,7 +49,6 @@ public class ClueGame extends JFrame {
 	private List<Player> players;
 	private int playerTurnIndex;
 	private int numHumans;
-	private Card accusePlayer, accuseRoom, accuseWeapon;
 	
 	private String playerConfig, CardsConfig;
 	private final int solutionNum = Card.CardType.size;
@@ -73,7 +72,7 @@ public class ClueGame extends JFrame {
 		pb = new Board(lConfig, legCongic);
 	}*/
 	
-	public ClueGame() {
+	public ClueGame2() {
 		super();
 		allCards = new ArrayList<Card>();
 		allRoomCards = new ArrayList<Card>();
@@ -158,12 +157,12 @@ public class ClueGame extends JFrame {
 		
 		Player workingplayer = getPlayersTurn();
 		controlPanel.updatePlayerTurnDisplay(workingplayer.getName());
+		
 		if (workingplayer.getClass() == HumanPlayer.class) {
 			humanInfo.updatePlayerHandDisplay(workingplayer.getMyCards());
 		} else {
 			humanInfo.updatePlayerHandDisplay(new ArrayList<Card>());
 		}
-		
 			
 		//Still need to update the game control panel to display whose turn it is
 			
@@ -202,10 +201,11 @@ public class ClueGame extends JFrame {
 	}
 	
 	public class AccusationPanel extends JPanel {
+		private Card accusePlayer, accuseRoom, accuseWeapon;
 		private JComboBox<String> playerBox, roomBox, weaponBox;
-		private ClueGame cg;
+		private ClueGame2 cg;
 		
-		public AccusationPanel(ClueGame cg) {
+		public AccusationPanel(ClueGame2 cg) {
 			this.cg = cg;
 			JFrame.setDefaultLookAndFeelDecorated(true);
 			setBorder(new TitledBorder (new EtchedBorder(), "Accusation"));
@@ -219,14 +219,6 @@ public class ClueGame extends JFrame {
 			playerBox.addActionListener(listener);
 			roomBox.addActionListener(listener);
 			weaponBox.addActionListener(listener);
-			
-			/*
-			if (players.get(playerTurnIndex).getRoomPlayerIn() != null) {
-				room = players.get(playerTurnIndex).getRoomPlayerIn();
-				roomName = room.toString();
-				cg.accuseRoom = room;
-			}
-			*/
 			
 			JLabel playerLabel = new JLabel("Player");
 			JLabel roomLabel = new JLabel("Room");
@@ -260,21 +252,21 @@ public class ClueGame extends JFrame {
 			    	for(Card personCard : allPeopleCards) {
 						if (personCard.toString().equals(playerBox.getSelectedItem().toString())) {
 							Card person = new Card(personCard);
-							cg.accusePlayer = person;
+							accusePlayer = person;
 						}
 					}
 			    } else if (e.getSource() == weaponBox) {
 			    	for(Card weaponCard : allWeaponCards) {
 						if (weaponCard.toString().equals(weaponBox.getSelectedItem().toString())) {
 							Card weapon = new Card(weaponCard);
-							cg.accuseWeapon = weapon;
+							accuseWeapon = weapon;
 						}
 					}
 			    } else if (e.getSource() == roomBox) {
 			    	for(Card roomCard : allRoomCards) {
 						if (roomCard.toString().equals(roomBox.getSelectedItem().toString())) {
 							Card weapon = new Card(roomCard);
-							cg.accuseRoom = weapon;
+							accuseRoom = weapon;
 						}
 					}
 			    }
@@ -695,7 +687,7 @@ public class ClueGame extends JFrame {
 	}
 
 	public static void main(String[] args){
-		ClueGame game = new ClueGame();
+		ClueGame2 game = new ClueGame2();
 		
 		game.engine = game.new gameEngine();
 		game.engineThread = new Thread(game.engine);
@@ -894,7 +886,7 @@ public class ClueGame extends JFrame {
 					+ " of deja vu.", "You have already moved."};
 			
 			badClick = engine.isHuman() ? (controlPanel.getAllowAccuse() ? badArea : badOrder) : badTurn;
-			JOptionPane.showMessageDialog(ClueGame.this, badClick[0], badClick[1], JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(ClueGame2.this, badClick[0], badClick[1], JOptionPane.INFORMATION_MESSAGE);
 		} 
 	}
 }
