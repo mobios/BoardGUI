@@ -47,7 +47,29 @@ public class HumanPlayer extends Player {
 	}
 
 	@Override
-	public void playerSuggested(BoardCell location) {
+	public void playerSuggested(Player p) {		
+		BoardCell location;
+		//ensures that the suggested player doesn't get moved on top of the suggesting player
+		if(board.getCellAt(board.calcIndex(p.getPosition().getRow()+1, 
+			p.getPosition().getColumn())).isRoom()) {
+				location = board.getCellAt(board.calcIndex(p.getPosition().getRow()+1, 
+						p.getPosition().getColumn()));
+		} else if(board.getCellAt(board.calcIndex(p.getPosition().getRow()-1, 
+				p.getPosition().getColumn())).isRoom()) {
+			location = board.getCellAt(board.calcIndex(p.getPosition().getRow()-1, 
+					p.getPosition().getColumn()));
+		} else if(board.getCellAt(board.calcIndex(p.getPosition().getRow(), 
+				p.getPosition().getColumn()+1)).isRoom()) {
+			location = board.getCellAt(board.calcIndex(p.getPosition().getRow(), 
+					p.getPosition().getColumn()+1));
+		} else if(board.getCellAt(board.calcIndex(p.getPosition().getRow(), 
+				p.getPosition().getColumn()-1)).isRoom()) {
+			location = board.getCellAt(board.calcIndex(p.getPosition().getRow(), 
+					p.getPosition().getColumn()-1));
+		} else {
+			location = p.getPosition();//just in case the above four are not true for some reason
+		}
+		
 		setPosition(location);
 		
 	}

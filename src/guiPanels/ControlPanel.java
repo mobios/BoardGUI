@@ -36,6 +36,8 @@ public class ControlPanel extends JPanel {
 		accuse = new JButton("Make an Accusation");
 		next = new JButton("End Turn");
 		
+		accuse.setEnabled(false);
+		
 		add(BorderLayout.EAST, handbook);
 		add(BorderLayout.EAST,accuse);
 		add(BorderLayout.EAST,next);

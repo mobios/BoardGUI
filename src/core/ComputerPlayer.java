@@ -77,13 +77,13 @@ public class ComputerPlayer extends Player {
 	@Override
 	public ArrayList<Card> accuse(Random rgen) { // Only public to make junit tests... should be private for release
 												// Does not make use of sieveKnownCards function YET
-		ArrayList<Card> workingSet = new ArrayList<Card>(ClueGame2.getAllCards());
+		ArrayList<Card> workingSet = new ArrayList<Card>(ClueGame.getAllCards());
 		workingSet.remove(myCards);
 		workingSet.remove(knownCards);
 		
-		ArrayList<Card> personCards = new ArrayList<Card>(ClueGame2.getAllPeopleCards());
-		ArrayList<Card> weaponCards = new ArrayList<Card>(ClueGame2.getAllWeaponCards());
-		ArrayList<Card> roomCards = new ArrayList<Card>(ClueGame2.getAllRoomCards());
+		ArrayList<Card> personCards = new ArrayList<Card>(ClueGame.getAllPeopleCards());
+		ArrayList<Card> weaponCards = new ArrayList<Card>(ClueGame.getAllWeaponCards());
+		ArrayList<Card> roomCards = new ArrayList<Card>(ClueGame.getAllRoomCards());
 		
 		personCards.removeAll(workingSet);
 		weaponCards.removeAll(workingSet);
@@ -99,6 +99,8 @@ public class ComputerPlayer extends Player {
 	@Override
 	public ArrayList<Card> generateSuggestion(Random rand) {
 		ArrayList<Card> ret = new ArrayList<Card>();
+		ArrayList<Card> allPeopleCards = new ArrayList<Card>(ClueGame.getAllPeopleCards());
+		
 		Card room = null;
 		for(Card card : ClueGame.getAllRoomCards()){
 			if(card.getName().startsWith(((RoomCell)getPosition()).getRoomInitial()+"")){
@@ -109,10 +111,16 @@ public class ComputerPlayer extends Player {
 		if(room != null)
 			ret.add(room);
 		
-		ArrayList<Card> personCards = sieveKnownCards(ClueGame2.getAllPeopleCards());
-		ArrayList<Card> weaponCards = sieveKnownCards(ClueGame2.getAllWeaponCards());
-		ret.add(ClueGame2.getRandFromList(rand, personCards));
-		ret.add(ClueGame2.getRandFromList(rand, weaponCards));
+		for (int i=0; i < allPeopleCards.size(); i++) {
+			if (allPeopleCards.get(i).getName().equals(this.getName())) {
+				allPeopleCards.remove(allPeopleCards.get(i));
+			}
+		}
+		
+		ArrayList<Card> personCards = sieveKnownCards(allPeopleCards);
+		ArrayList<Card> weaponCards = sieveKnownCards(ClueGame.getAllWeaponCards());
+		ret.add(ClueGame.getRandFromList(rand, personCards));
+		ret.add(ClueGame.getRandFromList(rand, weaponCards));
 		
 		return ret;
 	}	
@@ -227,7 +235,7 @@ public class ComputerPlayer extends Player {
 	}
 	
 	private int rltd(){
-		int numofrooms = ClueGame2.getAllRoomCards().size();
+		int numofrooms = ClueGame.getAllRoomCards().size();
 		int roomsinhand = 0;
 		
 		for(Card card : knownCards){
@@ -248,7 +256,7 @@ public class ComputerPlayer extends Player {
 	}
 	
 	private int cltf(){
-		int numofcards = ClueGame2.getAllPeopleCards().size() + ClueGame2.getAllWeaponCards().size();
+		int numofcards = ClueGame.getAllPeopleCards().size() + ClueGame.getAllWeaponCards().size();
 		int cardsinhand = 0;
 		
 		for(Card card : knownCards){
@@ -270,7 +278,29 @@ public class ComputerPlayer extends Player {
 
 	
 	@Override
-	public void playerSuggested(BoardCell location) {
+	public void playerSuggested(Player p) {
+		BoardCell location;
+		//ensures that the suggested player doesn't get moved on top of the suggesting player
+		if(board.getCellAt(board.calcIndex(p.getPosition().getRow()+1, 
+			p.getPosition().getColumn())).isRoom()) {
+				location = board.getCellAt(board.calcIndex(p.getPosition().getRow()+1, 
+						p.getPosition().getColumn()));
+		} else if(board.getCellAt(board.calcIndex(p.getPosition().getRow()-1, 
+				p.getPosition().getColumn())).isRoom()) {
+			location = board.getCellAt(board.calcIndex(p.getPosition().getRow()-1, 
+					p.getPosition().getColumn()));
+		} else if(board.getCellAt(board.calcIndex(p.getPosition().getRow(), 
+				p.getPosition().getColumn()+1)).isRoom()) {
+			location = board.getCellAt(board.calcIndex(p.getPosition().getRow(), 
+					p.getPosition().getColumn()+1));
+		} else if(board.getCellAt(board.calcIndex(p.getPosition().getRow(), 
+				p.getPosition().getColumn()-1)).isRoom()) {
+			location = board.getCellAt(board.calcIndex(p.getPosition().getRow(), 
+					p.getPosition().getColumn()-1));
+		} else {
+			location = p.getPosition();//just in case the above four are not true for some reason
+		}
+		
 		setPosition(location);
 		adjMap = null;
 	}

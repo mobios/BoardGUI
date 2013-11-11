@@ -156,7 +156,7 @@ public abstract class Player {
 		ArrayList<Card> paramCopy = new ArrayList<Card>(params);
 		params.removeAll(myCards);
 		paramCopy.removeAll(params);
-		return ((paramCopy.size() > 0 ) ? ClueGame2.getRandFromList(rand, paramCopy) : null);
+		return ((paramCopy.size() > 0 ) ? ClueGame.getRandFromList(rand, paramCopy) : null);
 	}
 	
 	public abstract ArrayList<Card> accuse(Random rand);
@@ -186,6 +186,47 @@ public abstract class Player {
 	public void setTurnFinished(boolean b) {
 		turnFinished = b;
 	}
+	
+	public boolean isInRoom() {
+		if (roomPlayerIn != null) {
+			return true;
+		} 
+		
+		return false;
+	}
 
-	public abstract void playerSuggested(BoardCell location);
+	public abstract void playerSuggested(Player p);
+	
+	public void moveToDoorwayIfInRoom() {
+		if (isInRoomNotDoorway()) {
+			moveToDoorway();
+		}
+	}
+	
+	private boolean isInRoomNotDoorway() {
+		return (board.getCellAt(board.calcIndex(getPosition().getRow(), 
+				getPosition().getColumn())).isRoom() &&
+				!board.getCellAt(board.calcIndex(getPosition().getRow(), 
+				getPosition().getColumn())).isDoorway());
+	}
+	
+	private void moveToDoorway() {
+		if(board.getCellAt(board.calcIndex(getPosition().getRow()-1, 
+				getPosition().getColumn())).isDoorway()) {
+				setPosition(board.getCellAt(board.calcIndex(getPosition().getRow()-1, 
+				getPosition().getColumn())));
+		} else if(board.getCellAt(board.calcIndex(getPosition().getRow()+1, 
+				getPosition().getColumn())).isDoorway()) {
+				setPosition(board.getCellAt(board.calcIndex(getPosition().getRow()+1, 
+						getPosition().getColumn())));
+		} else if(board.getCellAt(board.calcIndex(getPosition().getRow(), 
+				getPosition().getColumn()-1)).isDoorway()) {
+				setPosition(board.getCellAt(board.calcIndex(getPosition().getRow(), 
+						getPosition().getColumn()-1)));
+		} else if(board.getCellAt(board.calcIndex(getPosition().getRow(), 
+				getPosition().getColumn()+1)).isDoorway()) {
+				setPosition(board.getCellAt(board.calcIndex(getPosition().getRow(), 
+						getPosition().getColumn()+1)));
+		}
+	}
 }

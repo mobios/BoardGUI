@@ -69,5 +69,7 @@ public class PanelInfo extends JPanel{
 		}
 		
 		add(thisDeck);
+		
+		revalidate();
 	}
 }

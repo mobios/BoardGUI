@@ -19,8 +19,6 @@ public class RoomCell extends BoardCell {
 	
 	@Override
 	public boolean isRoom(){
-		
-		
 		return true;
 	}
 	

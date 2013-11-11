@@ -106,6 +106,11 @@ public class Card implements Comparable<Card>{
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+	@Override
+	public String toString() {
+		return name;
+	}
 
 	@Override
 	public int compareTo(Card arg0) {
@@ -115,9 +120,9 @@ public class Card implements Comparable<Card>{
 	}
 	
 	public static ArrayList<Card> stringSuggestion(String person, String weapon, String room){
-		ClueGame2.assertArgument(person, ClueGame2.getAllPeopleIdent());
-		ClueGame2.assertArgument(weapon, ClueGame2.getAllWeaponIdent());
-		ClueGame2.assertArgument(room, ClueGame2.getAllRoomIdent());
+		ClueGame.assertArgument(person, ClueGame.getAllPeopleIdent());
+		ClueGame.assertArgument(weapon, ClueGame.getAllWeaponIdent());
+		ClueGame.assertArgument(room, ClueGame.getAllRoomIdent());
 		
 
 		return new ArrayList<Card>(Arrays.asList(new Card[]{new Card(person, Card.CardType.PERSON), new Card(weapon, Card.CardType.WEAPON), new Card(room, Card.CardType.ROOM)}));
