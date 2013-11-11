@@ -76,7 +76,7 @@ public class ClueGame extends JFrame {
 		
 		solution = new ArrayList<Card>();
 		players = new ArrayList<Player>();
-		randGen = new Random(0);
+		randGen = new Random();
 		playerTurnIndex = 0;
 		
 		playerConfig = "players.txt";
@@ -216,11 +216,9 @@ public class ClueGame extends JFrame {
 			this.cg = cg;
 			JFrame.setDefaultLookAndFeelDecorated(true);
 			setSize(new Dimension(500, 100));
-			//setBorder(new TitledBorder (new EtchedBorder(), "Make an Accusation"));
 			setLayout(new GridLayout(0,3));
 			setModal(true);
 			
-			//String roomName = null;
 			this.playerBox = createAccusationCombo(allPeopleCards);
 			this.roomBox = createAccusationCombo(allRoomCards);
 			this.weaponBox = createAccusationCombo(allWeaponCards);
@@ -255,7 +253,7 @@ public class ClueGame extends JFrame {
 					accuseRoom = null;
 					accuseWeapon = null;
 					setVisible(false);
-					cg.nextPlayer();
+					engine.advanceHuman();
 				}
 			});
 			
@@ -431,7 +429,7 @@ public class ClueGame extends JFrame {
 		dNotesItem.addActionListener(new MenuItemListener());
 		return dNotesItem;
 	}
-
+	
 	public void setDebugSeed(long seed){
 		randGen.setSeed(seed);
 	}
@@ -967,7 +965,7 @@ public class ClueGame extends JFrame {
 					controlPanel.setAllowAccuse(true);
 					while(duringHuman){								// Exists only to make sure notification is for the end of the humans turn
 						try {
-							wait();									// Fully event driven -- engine blocks until human ends turn
+							wait();
 						} catch (InterruptedException e) {}
 					}
 				}

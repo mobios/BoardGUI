@@ -133,6 +133,7 @@ public abstract class Player {
 	}
 
 	public abstract ArrayList<Card> generateSuggestion(Random rand);
+	
 	public void setMyCards(ArrayList<Card> myCards) {
 		this.myCards = myCards;
 	}
