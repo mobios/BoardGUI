@@ -15,6 +15,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.Random;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.TreeMap;
@@ -79,6 +80,7 @@ public class Board extends JPanel{
 		addMouseListener(listener);
 	}
 	
+	@Override
 	public void paintComponent(Graphics g){ // used to draw the board
 		super.paintComponent(g);
 		
@@ -89,7 +91,7 @@ public class Board extends JPanel{
 			cell.draw(g, this);
 		}
 		for (Player p: clueGamePtr.getPlayers()){
-			p.drawPlayers(g);
+			p.drawPlayer(g);
 		}	
 	}
 	
@@ -446,7 +448,9 @@ public class Board extends JPanel{
 		togo.add(new Path(target,0));
 		long counter = System.nanoTime()/1000000;
 		
-		while(!seen.contains(position) || (((System.nanoTime()/1000000)-counter < 250) && !togo.isEmpty())){
+		while(!seen.contains(position) || ((System.nanoTime()/1000000)-counter < 500) && !togo.isEmpty()){
+			if(togo.isEmpty())
+				return ret;
 			Path working = togo.remove();
 			seen.add(working.getCell());
 			BoardCell wc = working.getCell();
@@ -466,5 +470,34 @@ public class Board extends JPanel{
 			}
 		}
 		return ret;
+	}
+	
+	public boolean playerInCell(BoardCell target){
+		return playerCountCell(target) > 1;
+	}
+	
+	public int playerCountCell(BoardCell target){
+		int ret =0;
+		for(Player check : clueGamePtr.getPlayers()){
+			if(check.getPosition().equals(target))
+				ret++;
+		}
+		return ret;
+	}
+	
+	public BoardCell getRandEmptyCell(Random rand, List<BoardCell> list){
+		List<BoardCell> check = new ArrayList<BoardCell>();
+		for(BoardCell cell : list){
+			if(cell.getClass() == RoomCell.class){
+				check.add(cell);
+				continue;
+			}
+			
+			if(playerInCell(cell))
+				continue;
+			
+			check.add(cell);
+		}
+		return list.get(rand.nextInt(list.size()));
 	}
 }

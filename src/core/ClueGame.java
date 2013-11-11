@@ -143,8 +143,7 @@ public class ClueGame extends JFrame {
 		int roll = rollDie();
 		controlPanel.updateDieRoll(roll);
 		board.setPcc(workingplayer.getPosition());
-		board.calcTargets(getPlayersTurn().getRow(), getPlayersTurn().getColumn(), roll);	
-		getPlayersTurn().doTurn(randGen, board);
+		board.calcTargets(getPlayersTurn().getRow(), getPlayersTurn().getColumn(), roll);
 		
 		return workingplayer;
 	}
@@ -295,7 +294,7 @@ public class ClueGame extends JFrame {
 			
 			//players.add(((ln == 0) ? new HumanPlayer() : new ComputerPlayer()).set(args[0].trim(), null, Color.getHSBColor(hue, saturation, lum), board.getCellAt(calcIndex(row, column))));
 			players.add(new ComputerPlayer().set(args[0].trim(), 
-					null, Color.getHSBColor(hue, saturation, lum), board.getCellAt(calcIndex(row, column))));
+					null, Color.getHSBColor(hue, saturation, lum), board.getCellAt(calcIndex(row, column)), board));
 		}
 		pfs.close();
 		playerLoad = true;
@@ -462,7 +461,7 @@ public class ClueGame extends JFrame {
 		return checkAccusation(Card.stringSuggestion(person, weapon, room));
 	}
 
-	private boolean checkAccusation(ArrayList<Card> cards){// INTERNAL CLASS USE ONLY
+	private boolean checkAccusation(List<Card> cards){// INTERNAL CLASS USE ONLY
 		assertState(sol, "All CheckAccusation()'s", "deal()");
 		boolean debugbreakout =  solution.containsAll(cards);
 		if(debugbreakout && solution.size() == cards.size())
@@ -671,16 +670,11 @@ public class ClueGame extends JFrame {
 			advancePlayersTurns();
 		}
 	}
-	
-	public Collection<Card> suggestionMade(){
-		return suggestionMade(null);
-	}
-	
-	public Collection<Card> suggestionMade(List<Card> suggestion){
+		
+	public Card suggestionMade(List<Card> suggestion){
 		HashSet<Card> rS = new HashSet<Card>();
 		for(Player player : players){
 			if(player.equals(getPlayersTurn())){
-				suggestion = ((suggestion == null) ? player.generateSuggestion(getRandGen()) : suggestion);
 				continue;
 			}
 			Card toAdd = player.disproveSuggestion(getRandGen(), suggestion);
@@ -691,7 +685,7 @@ public class ClueGame extends JFrame {
 		
 		if(rS.size() == 0)
 			return null;
-		return rS;
+		return getRandFromList(randGen, new ArrayList<Card>(rS));
 	}
 
 	public Player getHuman(){
@@ -720,7 +714,8 @@ public class ClueGame extends JFrame {
 				currentPlayer = nextPlayer();
 				controlPanel.updatePlayerTurnDisplay(currentPlayer.getName());
 				if(currentPlayer.getClass() == HumanPlayer.class){
-					duringHuman = true;
+					duringHuman = true;	
+					currentPlayer.doTurn(randGen, board);
 					controlPanel.setAllowAccuse(true);
 					while(duringHuman){								// Exists only to make sure notification is for the end of the humans turn
 						try {
@@ -730,7 +725,29 @@ public class ClueGame extends JFrame {
 				}
 				
 				else{
-					try {
+					try {	
+						Object[] response = currentPlayer.doTurn(randGen, board);
+						if(response != null){
+							
+							ArrayList<Card> action = new ArrayList<Card>();
+							action.add((Card)response[1]);
+							action.add((Card)response[2]);
+							action.add((Card)response[3]);
+							if((int)response[0] == 1){
+								currentPlayer.exposeToCard(suggestionMade(action));
+								for(Player player : players){
+									if(player.getName().equals(((Card)response[2]).getName())){
+										player.playerSuggested(currentPlayer.getPosition());
+										if(player.getClass() == HumanPlayer.class)
+											JOptionPane.showMessageDialog(ClueGame.this, player.getName() +" has been suggested in room " + ((Card)response[1]).getName(), "Human moved.", JOptionPane.INFORMATION_MESSAGE);
+									}
+								}
+							}
+							
+							else if((int)response[0] == 2){
+								accusationMade(action, currentPlayer);
+							}
+						}
 						Thread.sleep(1000);
 					} catch (InterruptedException e) {}
 				}
@@ -789,4 +806,13 @@ public class ClueGame extends JFrame {
 			JOptionPane.showMessageDialog(ClueGame.this, badClick[0], badClick[1], JOptionPane.INFORMATION_MESSAGE);
 		} 
 	}
+
+	private void accusationMade(List<Card> accus, Player player){
+		if(checkAccusation(accus)){
+			JOptionPane.showMessageDialog(this, player.getName() +" has won the game! They guessed:\n"+accus.get(0) + "\n"+accus.get(1) + "\n"+accus.get(2) + "\n", "Game over!", JOptionPane.INFORMATION_MESSAGE);
+			System.exit(0);
+		}
+		JOptionPane.showMessageDialog(this, player.getName() +" has made an incorrect accusation. They guessed:\n"+accus.get(0) + "\n"+accus.get(1) + "\n"+accus.get(2) + "\n", "Accusation made.", JOptionPane.INFORMATION_MESSAGE);
+	}	
+
 }

@@ -16,10 +16,11 @@ public class ComputerPlayer extends Player {
 	private List<RoomCell> visited;
 	private int[][] adjMap;
 	private RoomCell targetRoom;
+	private RoomCell lastRoom;
 		
-	public ComputerPlayer(String name, ArrayList<Card> myCards, Color color, BoardCell location) {
+	public ComputerPlayer(String name, ArrayList<Card> myCards, Color color, BoardCell location, Board board) {
 		this();
-		set(name, myCards, color, location);
+		set(name, myCards, color, location, board);
 	}
 	
 	public ComputerPlayer() {
@@ -28,11 +29,21 @@ public class ComputerPlayer extends Player {
 	};
 	
 	@Override
-	public Player set(String name, ArrayList<Card> myCards, Color myColor, BoardCell myPosition){
-		return super.set(name, myCards, myColor, myPosition);
+	public Player set(String name, ArrayList<Card> myCards, Color myColor, BoardCell myPosition, Board board){
+		return super.set(name, myCards, myColor, myPosition, board);
 	}
 	
-	public BoardCell pickLocation(Random rgen, Set<BoardCell> targets){ // needs method body
+	public BoardCell pickLocation(Random rgen, Board board, Set<BoardCell> targets){ // needs method body
+		if(targetRoom.equals(getPosition()) || (getPosition().getClass() == RoomCell.class && ((RoomCell)getPosition()).getRoomInitial() == targetRoom.getRoomInitial())){
+			List<BoardCell> notroom = new ArrayList<BoardCell>();
+			for(BoardCell cell : targets){
+				 if(targetRoom.equals(cell) || (cell.getClass() == RoomCell.class && ((RoomCell)cell).getRoomInitial() == targetRoom.getRoomInitial()))
+					 continue;
+				 notroom.add(cell);
+			}
+			return board.getRandEmptyCell(rgen, notroom);
+		}
+			
 		if(targets.contains(targetRoom)){
 			BoardCell retcell = targetRoom;
 			targetRoom= null;
@@ -87,9 +98,16 @@ public class ComputerPlayer extends Player {
 
 	@Override
 	public ArrayList<Card> generateSuggestion(Random rand) {
-		
 		ArrayList<Card> ret = new ArrayList<Card>();
-		ret.add(this.getRoomPlayerIn());
+		Card room = null;
+		for(Card card : ClueGame.getAllRoomCards()){
+			if(card.getName().startsWith(((RoomCell)getPosition()).getRoomInitial()+"")){
+				room = card;
+				break;
+			}
+		}
+		if(room != null)
+			ret.add(room);
 		
 		ArrayList<Card> personCards = sieveKnownCards(ClueGame.getAllPeopleCards());
 		ArrayList<Card> weaponCards = sieveKnownCards(ClueGame.getAllWeaponCards());
@@ -99,7 +117,6 @@ public class ComputerPlayer extends Player {
 		return ret;
 	}	
 	
-
 	public void makeMove(Random randGen, Board board) {
 		if(targetRoom ==null){
 			targetRoom = pickTarget(board.getAllDoors());
@@ -109,13 +126,7 @@ public class ComputerPlayer extends Player {
 		if(adjMap == null)
 			adjMap = board.generatePathing(getPosition(), targetRoom);
 		
-		BoardCell newCell = pickLocation(randGen, board.getTargets());
-		setPosition(newCell);
-		if(newCell.getClass() == RoomCell.class){
-			generateSuggetsion(rand);
-		
-		}
-		
+		setPosition(pickLocation(randGen, board, board.getTargets()));
 	}
 
 	@Override
@@ -123,9 +134,29 @@ public class ComputerPlayer extends Player {
 		try {
 			Thread.sleep(850);
 		} catch (InterruptedException e) {}
+		
+		if(rltd() < 2 && cltf() < 3){
+			List<Card> acc = accuse(randGen);
+			return new Object[]{2,acc.get(0),acc.get(1),acc.get(2)};
+		}
+		
+		if(rltd() < 3 && cltf() < 5){
+			if(randGen.nextFloat() > .17854f){
+				List<Card> acc = accuse(randGen);
+				return new Object[]{2,acc.get(0),acc.get(1),acc.get(2)};
+			}
+		}
+		
 		makeMove(randGen, board);
+		if(getPosition().getClass() == RoomCell.class){
+			List<Card> sugg = generateSuggestion(randGen);
+			return new Object[]{1,sugg.get(0),sugg.get(1),sugg.get(2)};
+		}
 		
+		if(getPosition() == targetRoom)
+			targetRoom = null;
 		
+		return null;
 	}
 	
 	public List<BoardCell> sievePreviousRoomCards(List<BoardCell> source){
@@ -159,7 +190,7 @@ public class ComputerPlayer extends Player {
 			dai[j][1] = 20000.d;
 		}
 		
-		if(rltd() == 0){
+		if(rltd() <= 1){
 			return allRooms.get((int)daio[0][0]);
 		}
 		
@@ -178,7 +209,7 @@ public class ComputerPlayer extends Player {
 				if(room.getName().startsWith(""+allRooms.get((int)dist[0]).getRoomInitial()))
 					visited = true;
 			
-			if(!visited)
+			if(!visited && (lastRoom == null || ((RoomCell)allRooms.get((int)dist[0])).getRoomInitial() != lastRoom.getRoomInitial()))
 				daios.add(dist);
 		}
 		
@@ -235,6 +266,13 @@ public class ComputerPlayer extends Player {
 			cardsinhand++;
 		}
 		return numofcards - cardsinhand;
+	}
+
+	
+	@Override
+	public void playerSuggested(BoardCell location) {
+		setPosition(location);
+		adjMap = null;
 	}
 	
 }
